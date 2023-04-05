@@ -4,18 +4,15 @@ import { getDefaultClient } from 'connectkit';
 import { createClient, configureChains } from 'wagmi';
 import { mainnet, goerli } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 
-const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_ID;
-const infuraId = process.env.NEXT_PUBLIC_INFURA_ID;
+const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_KEY_GOERLI;
 
 const { provider, chains } = configureChains(
-  [mainnet, goerli],
+  [goerli],
   [
     alchemyProvider({ apiKey: alchemyId as string }),
-    infuraProvider({ apiKey: infuraId as string }),
-    publicProvider(),
+    publicProvider()
   ]
 );
 
@@ -24,5 +21,6 @@ export const client = createClient(
     appName: 'skl-template',
     autoConnect: true,
     provider,
+    chains
   })
 );

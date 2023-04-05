@@ -1,14 +1,16 @@
+// @ts-nocheck
+
 import { ConnectKitButton } from 'connectkit';
 import { useAccount } from 'wagmi';
-
-import { Account } from '../components';
+import Feed  from '../components/feed/Feed'
 
 function Page() {
-  const { isConnected } = useAccount();
+  
+  const channel = "0xe945f1a1671d6819bedbb9178aed41b11e8b83a8";
+
   return (
     <>
-      <ConnectKitButton />
-      {isConnected && <Account />}
+    <Feed curationContract={channel} />
     </>
   );
 }

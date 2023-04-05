@@ -4,8 +4,9 @@ import type { AppProps } from 'next/app';
 import NextHead from 'next/head';
 import * as React from 'react';
 import { WagmiConfig } from 'wagmi';
-
 import { client } from '../wagmi';
+import { Footer } from '../components';
+import { Header } from '../components';
 
 function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = React.useState(false);
@@ -16,7 +17,8 @@ function App({ Component, pageProps }: AppProps) {
         <NextHead>
           <title>skl-template</title>
         </NextHead>
-
+        <Header />
+        <Footer />
         {mounted && <Component {...pageProps} />}
       </ConnectKitProvider>
     </WagmiConfig>

@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "alchemy-sdk": "^2.6.3",
     "connectkit": "^1.1.1",
     "ethers": "^5.7.0",
+    "install": "^0.13.0",
     "next": "^13.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
