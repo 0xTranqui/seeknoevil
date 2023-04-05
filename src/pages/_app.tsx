@@ -7,6 +7,11 @@ import { WagmiConfig } from 'wagmi';
 import { client } from '../wagmi';
 import { Footer } from '../components';
 import { Header } from '../components';
+import { CurationDataProvider } from "../providers/CurationDataProvider"
+
+
+// determines what curation contract will be used for blog context
+const channel = "0xe945f1a1671d6819bedbb9178aed41b11e8b83a8";
 
 function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = React.useState(false);
@@ -14,12 +19,14 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={client}>
       <ConnectKitProvider>
-        <NextHead>
-          <title>skl-template</title>
-        </NextHead>
-        <Header />
-        <Footer />
-        {mounted && <Component {...pageProps} />}
+        <CurationDataProvider curationContract={channel} >
+          <NextHead>
+            <title>seeknoevil</title>
+          </NextHead>
+          <Header />
+          <Footer />
+          {mounted && <Component {...pageProps} />}
+        </CurationDataProvider>
       </ConnectKitProvider>
     </WagmiConfig>
   );

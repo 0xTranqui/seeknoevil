@@ -18,7 +18,7 @@ const { provider, chains } = configureChains(
 
 export const client = createClient(
   getDefaultClient({
-    appName: 'skl-template',
+    appName: 'seeknoevil',
     autoConnect: true,
     provider,
     chains
