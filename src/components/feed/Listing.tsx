@@ -17,7 +17,7 @@ export const Listing = ({index,  metadata, collection}: any) => {
                         <Image
                             src={metadata?.media[0]?.gateway}
                             fill
-                            className="object-contain sm:object-left border-2 border-blue-500"
+                            className="object-contain sm:object-left"
 
                         />
                     </div>

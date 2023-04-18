@@ -3,7 +3,7 @@ import { useMemo } from "react"
 import { useEnsName } from "wagmi"
 import { shortenAddress } from "./shortenAddress"
 
-export function ensResolution({address}: any) {
+export function EnsResolution({address}: any) {
 
     const addressToResolve = address ? address : ""
 

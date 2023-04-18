@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { makeStyles } from '@material-ui/core';
 import React, { MutableRefObject } from 'react';
 
