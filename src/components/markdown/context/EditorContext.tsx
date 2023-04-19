@@ -11,6 +11,7 @@ import React, {
   import MarkdownFileData from '../types/MarkdownFileData';
   import callPublishApi from '../util/api/callPublishApi';
   import callUploadApi from '../util/api/callUploadApi';
+  import callMintApi from '../util/api/callMintApi';
   import downloadMarkdownFile from '../util/downloadMarkdownFile';
   import { encryptMarkdown } from '../util/markdownEncryption';
   import {
@@ -37,6 +38,7 @@ import React, {
     setPassword(val: string): void;
     // Functions
     uploadImage(file: File): Promise<string>;
+    uploadTokenMetadata(file: File): Promise<string>;
     publishMarkdown(): Promise<string>;
     downloadMarkdown(): void;
   };
@@ -58,6 +60,9 @@ import React, {
     async uploadImage() {
       return '';
     },
+    async uploadTokenMetadata() {
+      return '';
+    },    
   });
   
   export const EditorContextProvider: React.FC = ({ children }: any) => {
@@ -108,7 +113,22 @@ import React, {
   
     // Upload function - returns CID or throws
     const uploadImage = async (file: File): Promise<string> => {
+
       const uploadResponse = await callUploadApi(file);
+  
+      if (uploadResponse?.data?.cid) {
+        return uploadResponse.data.cid;
+      }
+  
+      throw Error('No CID in response: ' + JSON.stringify(uploadResponse));
+    };
+
+    // Mint function - returns CID or throws
+    const uploadTokenMetadata = async (file: File): Promise<string> => {
+
+      const uploadResponse = await callMintApi(file);
+
+      console.log("upload response inside of context: ", uploadResponse)
   
       if (uploadResponse?.data?.cid) {
         return uploadResponse.data.cid;
@@ -183,6 +203,7 @@ import React, {
       password,
       setPassword: setCleanedPassword,
       uploadImage,
+      uploadTokenMetadata,
       publishMarkdown,
       downloadMarkdown,
     };

@@ -27,14 +27,17 @@ const MarkdownEditor: React.FC<Props> = ({
   const classes = useStyles();
 
   return (
-    <Editor
-      id="mkdn"
-      onChange={(fn) => (getMarkdownRef.current = fn)}
-      disableExtensions={['container_notice']}
-      placeholder="The page looks a bit bare..."
-      defaultValue={initialContent}
-      {...editorProps}
-    />
+    <div className="shadow-[0_4px_23px_0px_rgba(0,0,0,0.15)] w-[813px] h-[100vh] border-[1px] border-[#DCDCDC] bg-[#FFFFFF] flex flex-row items-start">
+      <Editor
+        className="mx-[80px] mt-[88px] w-full items-start"
+        id="mkdn-1"
+        onChange={(fn) => (getMarkdownRef.current = fn)}
+        disableExtensions={['container_notice']}
+        placeholder=""
+        // defaultValue={initialContent}
+        {...editorProps}
+      />
+    </div>
   );
 };
 

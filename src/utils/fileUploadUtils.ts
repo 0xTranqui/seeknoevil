@@ -13,5 +13,11 @@ export const checkUploadSize = (
 
 // Returns whether the mime type is an image
 export const isImageMimeType = (mimeType?: string | null): boolean => {
-  return mimeType?.startsWith('image/') ?? false;
+  // return mimeType?.startsWith('image/') ?? false;
+  return true
+};
+
+// Returns whether the mime type is a jsob
+export const isJsonMimeType = (mimeType?: string | null): boolean => {
+  return mimeType?.startsWith('application/json') ?? false;
 };

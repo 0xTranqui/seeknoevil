@@ -10,7 +10,9 @@ const callUploadApi = async (file: File): Promise<ApiUploadResponse> => {
     body: formData,
   });
 
+
   return uploadResult.json();
+  
 };
 
 export default callUploadApi;

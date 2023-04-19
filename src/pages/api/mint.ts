@@ -15,7 +15,7 @@ import {
 import resultToEndpointResult from '../../utils/resultToEndpointResult';
 import formidable from 'formidable';
 
-export type ApiUploadResponse = EndpointResult<{
+export type ApiMintResponse = EndpointResult<{
   cid: string;
 }>;
 
@@ -35,13 +35,12 @@ const parseRequest = async (
     // Parse files from form
     form.parse(req, (err, fields, files) => {
 
-      // if (files && files.file && 'path' in files.file) {
         if (files && files.file && 'filepath' in files.file) {
         
         const file = files.file;
 
         // Check the file keyed by "file"
-        if (!checkUploadSize(file.size) || !isImageMimeType(file.type)) {
+        if (!checkUploadSize(file.size)) {
           console.log('Invalid file sent', file);
           resolve(undefined);
           return;
@@ -68,7 +67,7 @@ const parseRequest = async (
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ApiUploadResponse>
+  res: NextApiResponse<ApiMintResponse>
 ) {
 
   if (req.method !== 'POST') {
