@@ -29,6 +29,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ApiPublishResponse>
 ) {
+
   if (req.method !== 'POST') {
     sendInvalidRequestResponse(res);
     return;
@@ -37,7 +38,6 @@ export default async function handler(
   const publishRequest = parseRequest(req.body);
 
   if (publishRequest == null) {
-    console.log('Invalid request to publish handler', req.body);
     sendInvalidRequestResponse(res);
     return;
   }

@@ -12,6 +12,8 @@ const callPublishApi = async (
     })
   );
 
+  console.log("publish result", publishResult)
+
   return publishResult.json();
 };
 

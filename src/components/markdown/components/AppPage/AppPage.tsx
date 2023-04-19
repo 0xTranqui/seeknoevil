@@ -27,10 +27,10 @@ const AppPage: React.FC<Props> = ({ children }: any) => {
   return (
     <>
       <Box className={classes.root}>
-        <NavBar />
+        {/* <NavBar /> */}
         <Box className={classes.content}>{children}</Box>
       </Box>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

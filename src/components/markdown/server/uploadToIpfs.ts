@@ -7,8 +7,6 @@ import getValidMarkdownFilename from '../../../utils/getValidMarkdownFilename';
 function makeStorageClient() {
   const storageToken = process.env.NEXT_PUBLIC_WEB3_STORAGE_KEY;
 
-  console.log("what is my storage token:", storageToken)
-
   if (storageToken == null) {
     throw Error('Web3 Storage token not defined');
   }

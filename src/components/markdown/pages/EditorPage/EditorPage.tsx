@@ -21,7 +21,9 @@ import { useEditorContext } from '../../context/EditorContext';
 import DownloadDialog from '../components/DownloadDialog';
 import PublishDialog from '../components/PublishDialog/PublishDialog';
 import EditorSettingsBar from '../components/EditorSettingsBar';
+import PublishButton from '../components/PublishButton';
 import SettingsDialog from '../components/SettingsDialog';
+import MintDialog from '../components/MintDialog';
 
 const useStyles = makeStyles((theme) => ({}));
 
@@ -53,8 +55,10 @@ const EditorPage = () => {
   // FAB open state
   const [openActionsFab, setOpenActionsFab] = useState(false);
 
-  // Settings dialog
-  const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+  // // Settings dialog
+  // const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+  // Mint dialog
+  const [showMintDialog, setShowMintDialog] = useState(false);
 
   // Publish success dialog
   const [showPublishDialog, setShowPublishDialog] = useState(false);
@@ -64,6 +68,8 @@ const EditorPage = () => {
 
   // Editor context
   const editorContext = useEditorContext();
+
+
 
   // Toast state
   const [toastState, setToastState] = useState<ToastState>();
@@ -82,6 +88,7 @@ const EditorPage = () => {
     });
   }, [setInfoDialogState]);
   const uploadImage = async (file: File): Promise<string> => {
+
     if (!checkUploadSize(file.size)) {
       showImageInfoDialog();
       throw Error('File is too large');
@@ -120,7 +127,7 @@ const EditorPage = () => {
   };
 
   return (
-    <AppPage>
+    <div className="flex flex-row bg-[#F9FBFD] border-[1px] border-black min-h-[100vh] px-4 pt-20 pb-4 h-full w-full justify-center items-sta">
       {/*Editor FAB*/}
       <SpeedDialFab
         actions={editorPageSpeedDialActions}
@@ -152,16 +159,21 @@ const EditorPage = () => {
         setOpen={setShowDownloadDialog}
       />
 
-      <SettingsDialog
-        open={showSettingsDialog}
-        setOpen={setShowSettingsDialog}
-      />
+      {/* <SettingsDialog
+        open={showMintDialog}
+        setOpen={setShowMintDialog}
+      /> */}
+
+      <MintDialog
+        open={showMintDialog}
+        setOpen={setShowMintDialog}
+      />      
 
       {/*Main editor*/}
       {editorContext.isInitialized && (
         <div>
-          <EditorSettingsBar
-            onSettingsClicked={() => setShowSettingsDialog(true)}
+          <PublishButton
+            onPublishClicked={() => setShowMintDialog(true)}
           />
           <MarkdownEditor
             getMarkdownRef={editorContext.getEditorValue}
@@ -174,7 +186,7 @@ const EditorPage = () => {
           />
         </div>
       )}
-    </AppPage>
+      </div>
   );
 };
 
