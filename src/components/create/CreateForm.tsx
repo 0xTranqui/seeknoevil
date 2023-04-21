@@ -29,23 +29,9 @@ const CreateForm = () => {
     soulbound: "false",
   });
 
-  const {
-    config,
-    error,
-    write,
-    data,
-    isError,
-    isLoading,
-    isSuccess,
-    status,
-    mintNewData,
-    mintNewLoading,
-    tokenIdMinted,
-  } = useMintNew({
+  const { write, tokenIdMinted } = useMintNew({
     mintNewConfig: mintNewConfig,
   });
-
-  console.log("tokenIdMinted", tokenIdMinted);
 
   const [mintWithDataConfig, setMintWithDataConfig] = useState({
     // curatedAddress not calculated in state
@@ -165,7 +151,6 @@ const CreateForm = () => {
       });
       const cid = await editorContext.uploadTokenMetadata(jsonFile);
       return cid;
-      console.log("metadata cid: ", cid);
     } catch (err) {
       console.error("Error uploading metadata", err);
     }
@@ -190,7 +175,7 @@ const CreateForm = () => {
     setMinting(false);
   };
 
-  const justPin = async () => {
+  const storeMetadata = async () => {
     setMinting(true);
     try {
       const animationUrl = await handleMarkdownUpload();
@@ -212,9 +197,17 @@ const CreateForm = () => {
     }));
   };
 
+  function handleMint() {
+    try {
+      storeMetadata();
+    } finally {
+      mintNewToken();
+    }
+  }
+
   return (
     <div className="font-sans pl-4 flex flex-row flex-wrap justify-center items-start ">
-      <h1 className="flex flex-row w-full h-fit  text-[18px]">Publish</h1>
+      <h1 className="flex flex-row w-full h-fit text-[18px]">Publish</h1>
       <>
         {!thumbnail ? (
           <div
@@ -295,7 +288,19 @@ const CreateForm = () => {
         />
       </div>
 
-      <div className="flex flex-row justify-start space-x-1 w-full h-fit">
+      <div className="flex flex-row justify-end gap-2 w-full h-fit">
+        <button className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-american-silver bg-white text-onyx hover:text-american-silver hover:bg-onyx">
+          Cancel
+        </button>
+        <button
+          onClick={handleMint}
+          className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-onyx bg-onyx text-white hover:text-onyx hover:bg-white"
+        >
+          Mint
+        </button>
+      </div>
+
+      {/* <div className="flex flex-row justify-start space-x-1 w-full h-fit">
         <button
           onClick={() => justPin()}
           className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
@@ -303,20 +308,19 @@ const CreateForm = () => {
           pin
         </button>
         <button
-          // onClick={()=>write()}
-          onClickCapture={() => mintNewToken()}
+          onClick={() => mintNewToken()}
           className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
         >
           mint
         </button>
+
         <button
-          // onClick={()=>write()}
-          onClickCapture={() => curationWrite?.()}
+          onClick={() => curationWrite?.()}
           className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
         >
           curate
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };
