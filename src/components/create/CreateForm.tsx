@@ -156,37 +156,18 @@ const CreateForm = () => {
     }
   };
 
-  const [minting, setMinting] = useState(false);
-
-  // tbd form submit / mint button?
-  const pinAndMint = async () => {
-    setMinting(true);
-    try {
-      const animationUrl = await handleMarkdownUpload();
-      // const tokenURI = "ipfs://" + await handleMetadataUpload(animationUrl);
-      handleTokenURI(
-        "ipfs://" + (await handleMetadataUpload(animationUrl as string))
-      );
-      // await handleTokenURI(tokenURI)
-      write?.();
-    } catch (err) {
-      console.error("Error in minting process");
-    }
-    setMinting(false);
-  };
-
-  const storeMetadata = async () => {
-    setMinting(true);
+  const storeMetadata = async (callback: any) => {
     try {
       const animationUrl = await handleMarkdownUpload();
       const tokenURI =
         "ipfs://" + (await handleMetadataUpload(animationUrl as string));
       console.log("tokenURI");
       handleTokenURI(tokenURI);
+      callback(true);
     } catch (err) {
       console.error("Error in minting process");
+      callback(false);
     }
-    setMinting(false);
   };
 
   const mintNewToken = async () => {
@@ -198,10 +179,21 @@ const CreateForm = () => {
   };
 
   function handleMint() {
+    /**
+     * Post the metadata to IPFS
+     * Mint the token
+     */
     try {
-      storeMetadata();
-    } finally {
-      mintNewToken();
+      storeMetadata((success: any) => {
+        if (success) {
+          console.log("Metadata stored successfully.");
+        } else {
+          console.log("Metadata storage failed.");
+        }
+      });
+      // mintNewToken();
+    } catch (err) {
+      console.error(err, "There was an error minting your token");
     }
   }
 
@@ -300,27 +292,21 @@ const CreateForm = () => {
         </button>
       </div>
 
-      {/* <div className="flex flex-row justify-start space-x-1 w-full h-fit">
-        <button
-          onClick={() => justPin()}
+      <div className="flex flex-row justify-start space-x-1 w-full h-fit">
+        {/* <button
+          onClick={() => storeMetadata()}
           className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
         >
           pin
-        </button>
-        <button
-          onClick={() => mintNewToken()}
-          className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
-        >
-          mint
-        </button>
+        </button> */}
 
-        <button
+        {/* <button
           onClick={() => curationWrite?.()}
           className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
         >
           curate
-        </button>
-      </div> */}
+        </button> */}
+      </div>
     </div>
   );
 };
