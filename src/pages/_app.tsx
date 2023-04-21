@@ -9,9 +9,8 @@ import { Footer } from '../components';
 import { Header } from '../components';
 import { CurationDataProvider } from "../providers/CurationDataProvider"
 
-
 // determines what curation contract will be used for blog context
-const channel = "0xe945f1a1671d6819bedbb9178aed41b11e8b83a8";
+const channel = process.env.NEXT_PUBLIC_AP_721_CURATION_CONTRACT;
 
 function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = React.useState(false);

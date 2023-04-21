@@ -27,6 +27,9 @@ export function CurationDataProvider({ children, curationContract }: CurationDat
   const [lastUpdated, setLastUpdated] = useState();
   const [parsedMetadata, setParsedMetadata] = useState();
 
+  console.log("721 curationRecipeits ", curationMetadata)
+  console.log("721 mainnet listings ", parsedMetadata)
+
     // util function
     const convertDate = (date) => {
         const dateObj = new Date(date)

@@ -3,14 +3,84 @@
 import Image from 'next/image';
 import React, { useState, useRef } from 'react';
 import { useEditorContext } from '../markdown/context/EditorContext'
+import { useMintNew } from '../../hooks/useMintNew'
+import { useMintWithData } from '../../hooks/useMintWithData'
+
+const junghwan_eth = "0x4C53C6D546C9E38db56040Ab505460A9187A5281"
+const tranqui_eth = "0x806164c929Ad3A6f4bd70c2370b3Ef36c64dEaa8"
 
 const CreateForm = () => {
 
+  const [mintNewConfig, setMintNewConfig] = useState({
+      recipients: [junghwan_eth, tranqui_eth],
+      quantity: "1",
+      tokenLogic: "0x7Bc662793a16769777172A3a2c029A16BdC7E038",
+      tokenLogicInit: {
+          initialAdmin: "0x153D2A196dc8f1F6b9Aa87241864B3e4d4FEc170",
+          mintExistingStartTime: "0",
+          mintExistingPrice: "0"
+      },
+      tokenRenderer: "0x0a2bAD624b74b0093fDcFe22C447294b2c512e48",
+      tokenRendererInit: {
+          // tokenURI: tokenURI ? tokenURI : ""
+          tokenURI: ""
+      },
+      fundsRecipient: "0x153D2A196dc8f1F6b9Aa87241864B3e4d4FEc170",
+      royaltyBPS: "0",
+      primarySaleFeeRecipient: "0x153D2A196dc8f1F6b9Aa87241864B3e4d4FEc170",
+      primarySaleFeeBPS: "0",
+      soulbound: "false"
+  })
+
+  const {
+    config,
+    error,
+    write,
+    data,
+    isError,
+    isLoading,
+    isSuccess,
+    status,
+    mintNewData,
+    mintNewLoading,
+    tokenIdMinted    
+  } = useMintNew({
+    mintNewConfig: mintNewConfig
+  })
+
+  console.log("tokenIdMinted", tokenIdMinted)
+
+  const [mintWithDataConfig, setMintWithDataConfig] = useState({
+    // curatedAddress not calculated in state
+    selectedTokenId: "",
+    // curator address not calculated in state
+    curatorTargetType: 4, // (1 = nft contract, 3 = curation contract, 4 = nft item)
+    sortOrder: 0,
+    hasTokenId: true,
+    chainId: 5    
+  })
+
+  const {
+    curationConfig,
+    curationError,
+    curationWrite,
+    curationData,
+    curationIsError,
+    curationIsLoading,
+    curationIsSuccess,
+    curationStatus,
+    mintWaitData,
+    mintWaitLoading   
+  } = useMintWithData({
+    mintWithDataConfig: mintWithDataConfig,
+    tokenToCurate: tokenIdMinted
+  })  
+
   // publishing markdown to ipfs 
   const editorContext = useEditorContext()
-  const [isPublishing, setIsPublishing] = useState(false);
-  const [publishError, setPublishError] = useState(false);
-  const [publishedCid, setPublishedCid] = useState('')
+  // const [isPublishing, setIsPublishing] = useState(false);
+  // const [publishError, setPublishError] = useState(false);
+  // const [publishedCid, setPublishedCid] = useState('')
 
   // handling inputs for tokenMetadata + mint price
   const [tokenMetadata, setTokenMetadata] = useState({
@@ -41,7 +111,16 @@ const CreateForm = () => {
         ...prevTokenMetadata,
         animation_url: path,
     }));
-};
+  };
+
+  const handleTokenURI = (uri) => {
+    setMintNewConfig((prevConfig) => ({
+        ...prevConfig,
+        tokenRendererInit: {
+          tokenURI: uri
+        }
+    }));
+  };  
 
   // handling image upload
   const [thumbnail, setThumbnail] = useState(null);
@@ -100,6 +179,7 @@ const CreateForm = () => {
       const jsonBlob = new Blob([jsonString], { type: "application/json" });
       const jsonFile = new File([jsonBlob], "tokenMetadata.json", { type: "application/json", lastModified: Date.now() });
       const cid = await editorContext.uploadTokenMetadata(jsonFile)
+      return cid
       console.log("metadata cid: ", cid)
     } catch (err) {
       console.error("Error uploading metadata", err)
@@ -109,20 +189,45 @@ const CreateForm = () => {
   const [minting, setMinting] = useState(false)
 
   // tbd form submit / mint button?
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const pinAndMint = async () => {
     setMinting(true)
     try {
       const animationUrl = await handleMarkdownUpload();
-      await handleMetadataUpload(animationUrl);
+      // const tokenURI = "ipfs://" + await handleMetadataUpload(animationUrl);
+      handleTokenURI("ipfs://" + await handleMetadataUpload(animationUrl))
+      // await handleTokenURI(tokenURI)
+      write()
     } catch (err) {
       console.error("Error in minting process")
     }
     setMinting(false)
   };
 
+  const justPin = async () => {
+    setMinting(true)
+    try {
+      const animationUrl = await handleMarkdownUpload();
+      const tokenURI = "ipfs://" + await handleMetadataUpload(animationUrl);
+      console.log("tokenURI")
+      handleTokenURI(tokenURI)
+    } catch (err) {
+      console.error("Error in minting process")
+    }
+    setMinting(false)    
+  }
+
+  const mintNewToken = async () => {
+    write()
+    setMintWithDataConfig((prevConfig) => ({
+      ...prevConfig,
+      selectedTokenId: tokenIdMinted
+    }));
+  }
+
+  
   return (
-    <form onSubmit={handleSubmit} className="font-sans pl-4 flex flex-row flex-wrap justify-center items-start ">
+    // <form onSubmit={handleSubmit} className="font-sans pl-4 flex flex-row flex-wrap justify-center items-start ">
+    <div className="font-sans pl-4 flex flex-row flex-wrap justify-center items-start ">
       <h1 className="flex flex-row w-full h-fit  text-[18px]">Publish</h1>
       <>
       
@@ -201,16 +306,35 @@ const CreateForm = () => {
         />
       </div>
 
-      <div className="flex flex-row justify-end space-x-1 w-full h-fit">
-        <button className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white">
-            mint
+      <div className="flex flex-row justify-start space-x-1 w-full h-fit">
+        <button 
+          onClick={()=>justPin()}
+          className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
+        >
+            pin
         </button>
+        <button 
+          // onClick={()=>write()}
+          onClickCapture={()=>mintNewToken()}
+          className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
+        >
+            mint
+        </button>    
+        <button 
+          // onClick={()=>write()}
+          onClickCapture={()=>curationWrite()}
+          className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
+        >
+            curate
+        </button>               
       </div>
+      
 
       {/* <button type="submit" className="bg-blue-500 text-white px-4 py-2">
         Submit
       </button> */}
-    </form>
+    {/* </form> */}  
+    </div>
   );
 };
 
