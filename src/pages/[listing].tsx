@@ -73,8 +73,8 @@ const ListingPage: NextPage = () => {
 
     return (
         <div className="flex flex-row flex-wrap  bg-[#FFFFFF] min-h-[100vh] px-4 pt-10 pb-[108px] h-full w-full justify-center ">
-            <div className='w-[660px] pt-[155px]'>
-                <div className="font-[helvetica] flex flex-row w-full justify-start text-[22px] font-normal">
+            <div className='w-[625px] pt-[125px]'>
+                <div className="font-[helvetica] flex flex-row w-full justify-start text-[26px] font-normal">
                     {title}
                 </div>
                 <div className="font-[helvetica] flex flex-row w-full justify-start text-[15px] mt-[68px]">
