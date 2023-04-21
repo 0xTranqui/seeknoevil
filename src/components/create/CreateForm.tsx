@@ -315,14 +315,14 @@ const CreateForm = () => {
         </button>
         <button 
           // onClick={()=>write()}
-          onClickCapture={()=>mintNewToken()}
+          onClick={()=>mintNewToken()}
           className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
         >
             mint
         </button>    
         <button 
           // onClick={()=>write()}
-          onClickCapture={()=>curationWrite()}
+          onClick={()=>curationWrite()}
           className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
         >
             curate

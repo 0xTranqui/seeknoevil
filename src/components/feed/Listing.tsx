@@ -5,6 +5,17 @@ import Link from 'next/link';
 
 export const Listing = ({index,  metadata, collection}: any) => {
 
+    const title = metadata && metadata?.title
+    const author = metadata && metadata?.contract.contractDeployer
+
+    const convertDate = (date) => {
+        const dateObj = new Date(date)
+        const options = { month: 'long', day: 'numeric', year: 'numeric' };
+        const formattedDate = dateObj.toLocaleDateString('en-US', options).toLowerCase();
+        return formattedDate
+    }        
+    const publicationDate = metadata && convertDate(metadata?.timeLastUpdated)    
+
     return (
         <>
         {!metadata || !collection ? (
@@ -22,8 +33,8 @@ export const Listing = ({index,  metadata, collection}: any) => {
                         />
                     </div>
                     <div className="flex flex-row items-start flex-wrap w-full break-words">
-                        <b>{metadata?.contract.name}</b>
-                        &nbsp;{'April 4, 2023'}
+                        <b>{metadata?.title}</b>
+                        &nbsp;{publicationDate}
                     </div>  
                 </Link>                                                                                                                                
             </div>

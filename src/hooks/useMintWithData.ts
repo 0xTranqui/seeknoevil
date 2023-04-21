@@ -12,7 +12,8 @@ export function useMintWithData({mintWithDataConfig, tokenToCurate}: any) {
 
     const msgSender = address ? address : ""
 
-    const ap721Press = process.env.NEXT_PUBLIC_AP_721_CURATION_CONTRACT_NEW ? process.env.NEXT_PUBLIC_AP_721_CURATION_CONTRACT_NEW : ""
+    const ap721Press = process.env.NEXT_PUBLIC_AP_721_CURATION_CONTRACT ? process.env.NEXT_PUBLIC_AP_721_CURATION_CONTRACT : ""
+    const ap1155Press = process.env.NEXT_PUBLIC_AP_1155_CONTRACT ? process.env.NEXT_PUBLIC_AP_1155_CONTRACT : ""
     
     const mintingConfig = mintWithDataConfig ? mintWithDataConfig : null
 
@@ -34,7 +35,7 @@ export function useMintWithData({mintWithDataConfig, tokenToCurate}: any) {
             [
                 // inner brackets necessary because param is an array of structs
                 [
-                    ap721Press,
+                    ap1155Press,
                     tokenToCurate,
                     msgSender,
                     mintingConfig.sortOrder,

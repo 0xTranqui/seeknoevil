@@ -27,7 +27,7 @@ const MarkdownEditor: React.FC<Props> = ({
   const classes = useStyles();
 
   return (
-    <div className="shadow-[0_4px_23px_0px_rgba(0,0,0,0.15)] w-[813px] h-[100vh] border-[1px] border-[#DCDCDC] bg-[#FFFFFF] flex flex-row items-start">
+    <div className="shadow-[0_4px_23px_0px_rgba(0,0,0,0.15)] w-[813px] min-h-[100vh] border-[1px] border-[#DCDCDC] bg-[#FFFFFF] flex flex-row items-start">
       <Editor
         className="mx-[80px] mt-[88px] w-full items-start"
         id="mkdn-1"
