@@ -40,6 +40,7 @@ const parseRequest = async (
         
         const file = files.file;
 
+
         // Check the file keyed by "file"
         if (!checkUploadSize(file.size) || !isImageMimeType(file.type)) {
           console.log('Invalid file sent', file);
