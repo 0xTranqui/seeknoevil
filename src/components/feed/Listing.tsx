@@ -19,7 +19,7 @@ export const Listing = ({index,  metadata, collection}: any) => {
     return (
         <>
         {!metadata || !collection ? (
-            // TODO: maybe add a loading state instead here ?
+            // TODO: maybe add a loading state instead here?
             <div></div>            
         ) : (
             <div className="relative flex flex-row   flex-wrap w-full max-w-full text-[14px] border-b-[0.5px] border-black pb-[12px]">
