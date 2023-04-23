@@ -50,7 +50,7 @@ const MarkdownViewer: React.FC<Props> = ({ ipfsPath }) => {
   }
 
   return (
-    <div className=" w-full h-fit pb-20 border-[#DCDCDC] bg-[#FFFFFF] leadingflex flex-row items-start">        
+    <div className=" w-full h-fit pb-20 border-[#DCDCDC] bg-[#FFFFFF] leading flex flex-row items-start">        
       <Editor
         className=" w-full items-start text-[19px] sm:text-[17px]"
         disableExtensions={['container_notice']}
