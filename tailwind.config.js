@@ -2,7 +2,12 @@
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'IBMPlexMono': ['IBMPlexMono', 'sans-serif'],
+        'IBMPlexMonoLight': ['IBMPlexMonoLight', 'sans-serif'],
+      },      
+    },
   },
   plugins: [],
 };
