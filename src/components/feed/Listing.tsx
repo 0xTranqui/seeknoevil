@@ -22,13 +22,13 @@ export const Listing = ({index,  metadata, collection}: any) => {
             // TODO: maybe add a loading state instead here?
             <div></div>            
         ) : (
-            <div className="relative flex flex-row   flex-wrap w-full max-w-full text-[14px] border-b-[0.5px] border-black pb-[12px]">
+            <div className="relative flex flex-row flex-wrap w-full justify-start text-[14px] border-b-[0.5px] border-black pb-[12px]">
                 <Link href={`/${index}`} className="h-full sm:w-full">
-                    <div className=" w-[352px] h-full sm:h-[465px] sm:w-full relative  mb-[4px]">
+                    <div className=" w-[352px] h-full sm:h-[465px] sm:w-full relative mb-[4px]">
                         <Image
                             src={metadata?.media[0]?.gateway}
                             fill
-                            className="object-contain sm:object-left"
+                            className="object-contain object-left"
 
                         />
                     </div>
