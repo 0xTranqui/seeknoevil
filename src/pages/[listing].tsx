@@ -122,12 +122,12 @@ const ListingPage: NextPage = () => {
     const publicationDate = parsed && convertDate(parsed[listingId]?.timeLastUpdated)
 
     return (
-        <div className="text-[14px] flex flex-row flex-wrap  bg-[#FFFFFF] min-h-[100vh] px-4 pt-10 pb-[108px] h-full w-full justify-center ">
-            <div className='w-[341px] sm:w-[500px] md:w-[625px] pt-[125px]'>
-                <div className="font-[helvetica] flex flex-row w-full justify-start text-[26px] font-normal">
+        <div className="text-[14px] flex flex-row flex-wrap  bg-[#FFFFFF] min-h-[100vh] border-2 border-blue-500 pt-10 pb-[108px] h-full w-full justify-center ">
+            <div className=' w-[360px] sm:w-[500px] md:w-[625px] pt-[125px]'>
+                <div className="font-[helvetica] flex flex-row w-full justify-start text-[32px] font-normal">
                     {title}
                 </div>
-                <div className="font-[helvetica] flex flex-row w-full justify-start text-[15px] mt-[68px]">
+                <div className="font-[helvetica] flex flex-row w-full justify-start text-[15px] mt-[90px]">
                     <div className="font-[helvetica] font-bold">{shortenAddress(author)}</div>&nbsp;{publicationDate}
                 </div>            
                 {ipfsPath && (
