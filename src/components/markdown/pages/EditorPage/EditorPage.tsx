@@ -127,7 +127,7 @@ const EditorPage = () => {
   };
 
   return (
-    <div className="flex flex-row bg-[#F9FBFD] min-h-[100vh] px-4 pt-20 pb-4 h-full w-full justify-center items-sta">
+    <div className="flex flex-row bg-[#F9FBFD] min-h-[100vh] px-4 pt-20 pb-20 h-full w-full justify-center items-sta">
       {/*Editor FAB*/}
       <SpeedDialFab
         actions={editorPageSpeedDialActions}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { shortenAddress } from '../../utils/shortenAddress';
 
 type Props = {
     collectionAddress: string,
@@ -9,21 +10,21 @@ const ListingInfo: React.FC<Props> = ({ collectionAddress, tokenId }) => {
   return (
     <div className="flex flex-row flex-wrap w-full">
       <div className='font-IBMPlexMono flex flex-row w-full font-bold'>
-        contract address:
+        contract address:&nbsp;
         <a 
-        className="font-IBMPlexMonoLight font-normal"
+        className="hover:underline font-IBMPlexMonoLight font-normal"
         href={`https://goerli.etherscan.io/address/${collectionAddress}`}
         >
-        &nbsp;{collectionAddress}
+        {shortenAddress(collectionAddress)}
         </a>
       </div>
       <div className='font-IBMPlexMono flex flex-row w-full font-bold'>
-        tokenID:
+        tokenID:&nbsp;
         <a 
-        className="font-IBMPlexMonoLight font-normal"
+        className="hover:underline font-IBMPlexMonoLight font-normal"
         href={`https://goerli.etherscan.io/nft/${collectionAddress}/${tokenId}`}
         >
-        &nbsp;{tokenId}
+        {tokenId}
         </a>
       </div>      
     </div>
