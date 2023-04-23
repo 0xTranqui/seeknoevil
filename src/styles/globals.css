@@ -17,7 +17,14 @@
     font-size: normal;
 }
 
+
 * {
     font-family: 'Times New Roman', Times, serif;
-    line-height: 23px
+    line-height: 25.7px
+}
+
+@media screen and (min-width: 450px) {
+    * {
+        line-height: 23px;
+    }
 }

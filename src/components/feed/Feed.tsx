@@ -10,9 +10,9 @@ export default function Feed() {
     console.log("parsed :", parsed)
 
     return (
-        <section id="main-feed" className='bg-[#FFFFFF] px-4 pt-20 pb-4 h-full w-full justify-center'>
-            <div className="grid grid-cols-1 gap-4">        
-                {keys.map((key) => (
+        <section id="main-feed" className='bg-[#FFFFFF] pl-[16px] pt-20 pb-4 h-full sm:w-full'>
+            <div className="grid grid-cols-1 gap-4 ">        
+                {keys.slice().reverse().map((key) => (
                     <Listing
                         key={key}
                         index={key}
