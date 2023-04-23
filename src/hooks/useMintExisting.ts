@@ -3,7 +3,13 @@
 import { erc1155Press_abi } from "../contracts/erc1155Press_abi";
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from "wagmi";
 
-export function useMintExisting({tokenId, userAddress }: any) {
+type Props = {
+    tokenId: string,
+    userAddress: string,
+    onSuccessCB?: Function
+};
+
+export function useMintExisting({tokenId, userAddress, onSuccessCB }: Props) {
 
     const ap1155Press = process.env.NEXT_PUBLIC_AP_1155_CONTRACT ? process.env.NEXT_PUBLIC_AP_1155_CONTRACT : ""
 
@@ -32,7 +38,16 @@ export function useMintExisting({tokenId, userAddress }: any) {
         isLoading,
         isSuccess,
         status
-    } = useContractWrite(config)      
+    } = useContractWrite({
+        ...config,
+        onSuccess(data) {
+            if (!!onSuccessCB) {
+                onSuccessCB?.()
+            } else {
+                return
+            }
+        }
+    })      
 
     console.log("writeError: ", writeError)
     console.log("mintExisting data: ", data)
