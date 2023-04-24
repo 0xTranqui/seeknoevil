@@ -24,12 +24,14 @@ export const Listing = ({index,  metadata, collection}: any) => {
         ) : (
             <div className="relative flex flex-col w-full text-[14px] border-b-[0.5px] border-black pb-[12px]">
                 <div className="w-[352px] h-full sm:h-[465px] sm:w-full relative mb-[4px]">
-                    <Image
-                        src={metadata?.media[0]?.gateway}
-                        fill
-                        className="object-contain object-left"
+                    <Link href={`/${index}`}>
+                        <Image
+                            src={metadata?.media[0]?.gateway}
+                            fill
+                            className="object-contain object-left"
 
-                    />
+                        />
+                    </Link>
                 </div>
                 <div className="flex flex-row items-start flex-wrap w-full break-words">
                     <b>{metadata?.title}</b>
