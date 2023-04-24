@@ -67,6 +67,7 @@ export function useMintWithData({mintWithDataConfig, tokenToCurate}: any) {
 
     const { 
         write: curationWrite,
+        writeAsync: curationWriteAsync,
         data: curationData,
         isError: curationIsError,
         isLoading: curationIsLoading,
@@ -89,6 +90,7 @@ export function useMintWithData({mintWithDataConfig, tokenToCurate}: any) {
         curationConfig,
         curationError,
         curationWrite,
+        curationWriteAsync,
         curationData,
         curationIsError,
         curationIsLoading,

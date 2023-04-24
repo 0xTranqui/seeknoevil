@@ -10,6 +10,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useModal } from 'connectkit';
 import ListingInfo from '../components/mintSection/ListingInfo';
 import useNumMinted from '../hooks/useNumMinted';
+import useTotalSupply from '../hooks/useTotalSupply';
 
 const ListingPage: NextPage = () => {
     const router = useRouter(); 
@@ -27,6 +28,17 @@ const ListingPage: NextPage = () => {
         tokenId: tokenIdToMint
     })
 
+    const { totalSupply, fetchTotalSupply } = useTotalSupply({
+        collectionAddress: process.env.NEXT_PUBLIC_AP_1155_CONTRACT,
+        tokenId: tokenIdToMint
+    })
+
+    // function to refresh mint counts on successful mintExisting call
+    const refreshMintData = () => {
+        fetchNumMinted()
+        fetchTotalSupply()
+    }
+
     const {
         config,
         error,
@@ -41,7 +53,7 @@ const ListingPage: NextPage = () => {
     } = useMintExisting({
         tokenId: tokenIdToMint,
         userAddress: userAddress,
-        onSuccessCB: fetchNumMinted
+        onSuccessCB: refreshMintData
     })
 
     const handleMintInteraction = () => {
@@ -97,7 +109,10 @@ const ListingPage: NextPage = () => {
         )
     }    
 
-    const collectSpinner = isLoading || mintExistingLoading
+    const collectButtonContent = 
+        numMinted > 0 
+        ? "Collected!" 
+        : isLoading || mintExistingLoading
         ? svgLoader()
         : isSuccess && !mintExistingLoading && !isLoading 
         ? "Collected!" : "Collect – 0.00 ETH"     
@@ -123,12 +138,16 @@ const ListingPage: NextPage = () => {
 
     return (
         <div className="text-[14px] flex flex-row flex-wrap  bg-[#FFFFFF] min-h-[100vh] pt-10 pb-[108px] h-full w-full justify-center ">
-            <div className=' w-[360px] sm:w-[500px] md:w-[625px] pt-[125px]'>
-                <div className="font-[helvetica] flex flex-row w-full justify-start text-[32px] font-normal">
+            <div className=' w-[360px] sm:w-[500px] md:w-[625px] pt-[80px] sm:pt-[110px]'>
+                <div className="font-[helvetica] flex flex-row w-full justify-start text-[26px] font-normal">
                     {title}
                 </div>
-                <div className="font-[helvetica] flex flex-row w-full justify-start text-[15px] mt-[90px]">
-                    <div className="font-[helvetica] font-bold">{shortenAddress(author)}</div>&nbsp;{publicationDate}
+                <div className="font-[helvetica] italic flex flex-row w-full justify-start text-[15px] mt-[35px] sm:mt-[58px] mb-[6px]">
+                    <div className="font-[helvetica]">published by&nbsp;</div>
+                        <a href={`https://goerli.etherscan.io/address/${author}`} className="font-[helvetica] hover:underline">
+                            {shortenAddress(author)}
+                        </a>
+                        &nbsp;{"– " + publicationDate}
                 </div>            
                 {ipfsPath && (
                     <MarkdownViewer ipfsPath={ipfsPath} />
@@ -138,13 +157,18 @@ const ListingPage: NextPage = () => {
                     tokenId={tokenIdToMint}
                 />
                 <div className="w-full flex flex-row mt-[65px] items-center">
+                    {/* 
+                        this button is being disabled whenever someone has minted at least one token. 
+                        this is correct for free mints where mint cap per wallet = 1, but is incorrect for
+                        paid mints where users can mint unlimited quantity
+                    */}
                     <button 
-                    disabled={isSuccess && !mintExistingLoading && !isLoading ? true : false}
+                    disabled={numMinted > 0 || (isSuccess && !mintExistingLoading && !isLoading) ? true : false}
                     onClick={()=>handleMintInteraction?.()} className={`${isLoading || mintExistingLoading ? "bg-black text-white" : ""} disabled:cursor-default focus:bg-black focus:text-white text-center min-h-[46px] min-x-[186px] h-[46px] w-[186px] text-[14px] border-[1px] border-black font-[helvetica] rounded-[35px]   hover:cursor-pointer`}>
-                        {collectSpinner} 
+                        {collectButtonContent} 
                     </button>                    
                     <div className="ml-[23px] text-black font-IBMPlexMono">
-                        {numMinted}&nbsp;minted
+                        {totalSupply}&nbsp;minted
                     </div>
                 </div>
             </div>

@@ -5,9 +5,6 @@ import { usePrepareContractWrite, useContractWrite, useWaitForTransaction, useCo
 import { utils } from "ethers"
 import { useState } from "react";
 
-const junghwan_eth = "0x4C53C6D546C9E38db56040Ab505460A9187A5281"
-const tranqui_eth = "0x806164c929Ad3A6f4bd70c2370b3Ef36c64dEaa8"
-
 export function useMintNew({mintNewConfig}: any) {
 
     const [tokenIdMinted, setTokenIdMinted] = useState("")
@@ -56,6 +53,7 @@ export function useMintNew({mintNewConfig}: any) {
 
     const { 
         write,
+        writeAsync,
         data,
         error: writeError,
         isError,
@@ -65,7 +63,6 @@ export function useMintNew({mintNewConfig}: any) {
     } = useContractWrite(config)      
 
     console.log("writeError: ", writeError)
-    console.log("mintNew data: ", data)
 
     // Wait for data from mintNew call
     const { data: mintNewData, isLoading: mintNewLoading } = useWaitForTransaction({
@@ -98,6 +95,7 @@ export function useMintNew({mintNewConfig}: any) {
         config,
         error,
         write,
+        writeAsync,
         data,
         isError,
         isLoading,

@@ -10,24 +10,22 @@ type Props = {
 const useNumMinted = ({ collectionAddress, tokenId }: Props) => {
 
     const { address } = useAuth()
-    const userAddress = address ? address : null
+    const userAddress = address ? address : "0x0000000000000000000000000000000000000000"
     const [numMinted, setNumMinted] = useState("0")
 
-    const fetchNumMinted = () => {
-        console.log("im fetching")
-        if (!userAddress || !collectionAddress || !tokenId) {
+    const fetchNumMinted = async () => {
+        if (!collectionAddress || !tokenId) {
             return
         }                
         fetch(`https://goerli.ether.actor/${collectionAddress}/numMinted/${tokenId}/${userAddress}`)   
             .then(response => response.text())
             .then((data) => {
-                console.log("numMinted ", data) 
                 setNumMinted(data)
             })
         return
     }    
 
-    // run fetchNumMinted fetch on any change to userAddress, collectionAddress or tokenId
+    // run fetchNumMinted fetch on any change to userAddress
     useEffect(() => {
         fetchNumMinted()        
     },
