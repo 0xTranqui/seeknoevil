@@ -8,6 +8,7 @@ specifiers:
   '@types/crypto-js': ^4.1.1
   '@types/file-saver': ^2.0.5
   '@types/formidable': ^2.0.5
+  '@types/marked': ^4.0.8
   '@types/node': ^17.0.31
   '@types/react': ^18.0.37
   '@types/react-dom': ^18.0.3
@@ -21,6 +22,7 @@ specifiers:
   file-saver: ^2.0.5
   formidable: ^2.1.1
   install: ^0.13.0
+  marked: ^4.3.0
   nanoid: ^4.0.2
   next: ^13.0.0
   postcss: ^8.4.21
@@ -42,6 +44,7 @@ dependencies:
   '@types/crypto-js': 4.1.1
   '@types/file-saver': 2.0.5
   '@types/formidable': 2.0.5
+  '@types/marked': 4.0.8
   '@types/react': 18.0.37
   alchemy-sdk: 2.6.3
   connectkit: 1.1.1_qot54wyvmrn4yggxtbyxk4phpa
@@ -50,6 +53,7 @@ dependencies:
   file-saver: 2.0.5
   formidable: 2.1.1
   install: 0.13.0
+  marked: 4.3.0
   nanoid: 4.0.2
   next: 13.2.4_z72xxk7vwlamvgqemvc4ptm4du
   react: 18.2.0
@@ -1609,6 +1613,10 @@ packages:
 
   /@types/long/4.0.2:
     resolution: {integrity: sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==}
+    dev: false
+
+  /@types/marked/4.0.8:
+    resolution: {integrity: sha512-HVNzMT5QlWCOdeuBsgXP8EZzKUf0+AXzN+sLmjvaB3ZlLqO+e4u0uXrdw9ub69wBKFs+c6/pA4r9sy6cCDvImw==}
     dev: false
 
   /@types/minimatch/3.0.5:
@@ -5368,6 +5376,12 @@ packages:
       linkify-it: 3.0.3
       mdurl: 1.0.1
       uc.micro: 1.0.6
+    dev: false
+
+  /marked/4.3.0:
+    resolution: {integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==}
+    engines: {node: '>= 12'}
+    hasBin: true
     dev: false
 
   /mdurl/1.0.1:

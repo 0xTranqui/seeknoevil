@@ -38,26 +38,17 @@ export function useMintExisting({tokenId, userAddress, onSuccessCB }: Props) {
         isLoading,
         isSuccess,
         status
-    } = useContractWrite({
-        ...config,
-        onSuccess(data) {
-            if (!!onSuccessCB) {
-                onSuccessCB?.()
-            } else {
-                return
-            }
-        }
-    })      
-
-    console.log("writeError: ", writeError)
-    console.log("mintExisting data: ", data)
+    } = useContractWrite()      
 
     // Wait for data from mintExisting call
     const { data: mintExistingData, isLoading: mintExistingLoading } = useWaitForTransaction({
         hash:  data?.hash,
-        onSuccess(mintExistingData) {
-            console.log("txn complete: ", mintExistingData)
-            console.log("txn hash: ", mintExistingData.transactionHash)
+        onSuccess() {
+            if (!!onSuccessCB) {
+                onSuccessCB?.()
+            } else {
+                return
+            }            
         }
     })           
 
