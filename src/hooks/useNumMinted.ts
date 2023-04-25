@@ -20,6 +20,7 @@ const useNumMinted = ({ collectionAddress, tokenId }: Props) => {
         fetch(`https://goerli.ether.actor/${collectionAddress}/numMinted/${tokenId}/${userAddress}`)   
             .then(response => response.text())
             .then((data) => {
+                console.log("num minted = ", data)
                 setNumMinted(data)
             })
         return

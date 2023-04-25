@@ -30,3 +30,10 @@
         letter-spacing: 0.3px;
     }
 }
+
+@media (max-width: 640px) {
+    .image-responsive {
+        width: 360px;
+        height: auto;
+    }
+}
