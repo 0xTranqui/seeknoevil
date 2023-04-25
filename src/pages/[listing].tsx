@@ -35,11 +35,12 @@ const ListingPage: NextPage = () => {
           /^```[\s\S]*```/m, // Fenced code blocks
           /^`.*`$/, // Inline code
         ];
-      
         return markdownPatterns.some((pattern) => pattern.test(text));
-      };
-      
-      const fetchMediaType = async (ipfsPath) => {
+    };
+
+    const fetchMediaType = async (ipfsPath) => {
+        console.log("ipfs path being fetched", ipfsPath)
+        
         if (!ipfsPath) return null;
       
         try {
@@ -52,20 +53,14 @@ const ListingPage: NextPage = () => {
           const buffer = await response.arrayBuffer();
           const uint8Array = new Uint8Array(buffer);
       
-          // Check for MP4, WebM, and Ogg formats
+          // Check for MP4 format
           const magicNumber = uint8Array.slice(0, 8);
-          const mp4Signature = [0x00, 0x00, 0x00, [0x14, 0x20], 0x66, 0x74, 0x79, 0x70];
-          const webmSignature = [0x1A, 0x45, 0xDF, 0xA3];
-          const oggSignature = [0x4F, 0x67, 0x67, 0x53];
+          console.log("magic number", magicNumber)
+          const mp4Signature = [0x00, 0x00, 0x00, 0x66, 0x74, 0x79, 0x70];
+
+          const isMp4 = magicNumber.slice(0, 3).every((value, index) => value === mp4Signature[index]) && magicNumber.slice(4, 8).every((value, index) => value === mp4Signature[index + 3]);
       
-          const isMp4 = magicNumber.slice(0, 4).every((value, index) => {
-            return value === mp4Signature[index] || index === 3 && mp4Signature[3].includes(value);
-          }) && magicNumber.slice(4).every((value, index) => value === mp4Signature[index + 4]);
-      
-          const isWebm = magicNumber.slice(0, 4).every((value, index) => value === webmSignature[index]);
-          const isOgg = magicNumber.slice(0, 4).every((value, index) => value === oggSignature[index]);
-      
-          if (isMp4 || isWebm || isOgg) {
+          if (isMp4) {
             return "video";
           }
       
@@ -185,15 +180,18 @@ const ListingPage: NextPage = () => {
         // let converted = "https://ipfs.io/ipfs/" + ipfsPlain.slice(7)
         let converted = "https://cloudflare-ipfs.com/ipfs/" + ipfsPlain.slice(7)
         // let converted = "https://ipfs.infura.io/ipfs/" + ipfsPlain.slice(7)
-        // let converted = "https://cors-anywhere.herokuapp.com/https://ipfs.io/ipfs/" + ipfsPlain.slice(7);
         return converted
     }
 
+    console.log("imageURL")
+
     const animationUrl = parsed && parsed[listingId]?.rawMetadata?.animation_url;
     const ipfsPath = animationUrl ? processIPFS(animationUrl) : '';
+    const iamgeURL = parsed && parsed[listingId]?.media?.gateway
 
     const title = parsed && parsed[listingId]?.title
     const author = parsed && parsed[listingId]?.contract.contractDeployer
+    const description = parsed && parsed[listingId]?.description
 
     const convertDate = (date) => {
         const dateObj = new Date(date)
@@ -205,22 +203,23 @@ const ListingPage: NextPage = () => {
 
     const [mediaType, setMediaType] = useState(null);
 
-
     console.log("media type before hook", mediaType)
     useEffect(() => {
         (async () => {
             console.log("fetching media type")
-          const type = await fetchMediaType(ipfsPath);
-          console.log("media type", type)
-          setMediaType(type);
+            const type = await fetchMediaType(ipfsPath);
+            console.log("media type = ", type)
+            setMediaType(type);
         })();
-      }, [ipfsPath]);
-      
+    }, [ipfsPath]);
+
 
     if (!mediaType) {
         return (
-            <div>
+            <div className='text-[14px] flex flex-row flex-wrap  bg-[#FFFFFF] min-h-[100vh] pt-10 pb-[90px] sm:pb-[108px] h-full w-full justify-center sm:justify-start '>
+                <div className='pt-[80px] sm:pt-[110px] sm:px-[16px]'>
                 Loading...
+                </div>            
             </div>
         )
     } else if (mediaType === 'markdown') {
@@ -265,29 +264,29 @@ const ListingPage: NextPage = () => {
     } else if (mediaType === 'video') {
         return (
             <div className="text-[14px] flex flex-col sm:items-center bg-[#FFFFFF] min-h-[100vh] pt-[77px] sm:pt-10 pb-[90px] sm:pb-[108px] h-full w-full sm:justify-center">
-                <div className='sm:pt-[25px] border-green-500 border-2  w-full'>
-                    <VideoPlayer />
-                    <div className="flex flex-col sm:flex-row border-2 border-blue-500 w-full sm:justify-between mt-4 sm:mt-0">
-                        <div className="pl-[17px] sm:pl-[48px] pt-[16px] sm:border-2 sm:border-pink-400">
+                <div className='sm:pt-[25px] w-full'>
+                    <VideoPlayer videoPath={ipfsPath} thumnbnailURL={iamgeURL} />
+                    <div className="flex flex-col sm:flex-row  w-full sm:justify-between mt-4 sm:mt-0">
+                        <div className="pl-[17px] sm:pl-[48px] pt-[16px] ">
                             <div className="font-[helvetica] text-[20px] font-normal">
-                                {title} This is a video demo 
+                                {title}
                             </div>
                             <div className="flex flex-row font-[helvetica] text-[14px]">
                                 <div className="font-[helvetica]">by&nbsp;</div>
                                 <a href={`https://goerli.etherscan.io/address/${author}`} className="font-[helvetica] hover:underline">
-                                    {shortenAddress(author)} seeknoevil.eth
+                                    {shortenAddress(author)}
                                 </a>
                                 &nbsp;{"– " + publicationDate}
                             </div>
                             <div className="font-[helvetica] text-[14px] mt-[19px] mb-[60px] sm:mb-[19px] font-normal">
-                                {description} This is the first demo of seeknoevil
+                                {description}
                             </div>
                             <ListingInfo
                                 collectionAddress={process.env.NEXT_PUBLIC_AP_1155_CONTRACT}
                                 tokenId={tokenIdToMint}
                             />
                         </div>
-                        <div className="px-4 sm:pr-[212px] sm:border-2 sm:border-green-400 flex flex-col sm:flex-row flex-wrap items-start">
+                        <div className="px-4 sm:pr-[212px] flex flex-col sm:flex-row flex-wrap items-start">
                             <div className="w-full flex flex-row items-center pt-[16px] mb-[19px]">
                                 <button
                                     disabled={numMinted > 0 || (isSuccess && !mintExistingLoading && !isLoading) ? true : false}

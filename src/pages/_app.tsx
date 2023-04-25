@@ -8,9 +8,13 @@ import { client } from '../wagmi';
 import { Footer } from '../components';
 import { Header } from '../components';
 import { CurationDataProvider } from "../providers/CurationDataProvider"
+import { ChannelAdminProvider } from "../providers/ChannelAdminProvider"
 
 // determines what curation contract will be used for blog context
 const channel = process.env.NEXT_PUBLIC_AP_721_CURATION_CONTRACT;
+
+const channelAdmin_1 = "0x153D2A196dc8f1F6b9Aa87241864B3e4d4FEc170"
+const channelAdmin_2 = "0x4C53C6D546C9E38db56040Ab505460A9187A5281"
 
 function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = React.useState(false);
@@ -19,12 +23,14 @@ function App({ Component, pageProps }: AppProps) {
     <WagmiConfig client={client}>
       <ConnectKitProvider>
         <CurationDataProvider curationContract={channel} >
-          <NextHead>
-            <title>seeknoevil</title>
-          </NextHead>
-          <Header />
-          <Footer />
-          {mounted && <Component {...pageProps} />}
+          <ChannelAdminProvider channelAdmin1={channelAdmin_1} channelAdmin2={channelAdmin_2}>
+            <NextHead>
+              <title>seeknoevil</title>
+            </NextHead>
+            <Header />
+            <Footer />
+            {mounted && <Component {...pageProps} />}
+          </ChannelAdminProvider>
         </CurationDataProvider>
       </ConnectKitProvider>
     </WagmiConfig>
