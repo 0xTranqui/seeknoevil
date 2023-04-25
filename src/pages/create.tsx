@@ -22,7 +22,7 @@ export default function Create() {
       <>
       {userAddress !== admin1 && userAddress !== admin2 ? (
         <div className="flex flex-row w-full h-[100vh] justify-center items-center">
-          you do not have access to "create"
+          {`you do not have access to "create"`}
         </div>
       ) : (
         <EditorContextProvider>

@@ -20,7 +20,7 @@ export default function Manage() {
       <>
       {userAddress !== admin1 && userAddress !== admin2 ? (
         <div className="flex flex-row w-full h-[100vh] justify-center items-center">
-          you do not have access to "manage"
+          {`you do not have access to "create"`}
         </div>
       ) : (
         <div className="flex flex-row w-full h-[100vh] justify-center items-center">
