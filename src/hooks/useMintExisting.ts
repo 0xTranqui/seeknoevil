@@ -11,7 +11,11 @@ type Props = {
 
 export function useMintExisting({tokenId, userAddress, onSuccessCB }: Props) {
 
+    console.log("user address: ", userAddress)
+
     const ap1155Press = process.env.NEXT_PUBLIC_AP_1155_CONTRACT ? process.env.NEXT_PUBLIC_AP_1155_CONTRACT : ""
+
+    console.log(" address: ", ap1155Press)
 
     const validMint = !tokenId || !userAddress ? false : true 
 
