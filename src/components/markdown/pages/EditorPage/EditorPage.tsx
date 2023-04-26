@@ -52,8 +52,6 @@ const EditorPage = () => {
   }, [setInfoDialogState]);
   const isInfoDialogOpen = infoDialogState != null;
 
-  // FAB open state
-  const [openActionsFab, setOpenActionsFab] = useState(false);
 
   // // Settings dialog
   // const [showSettingsDialog, setShowSettingsDialog] = useState(false);
@@ -128,13 +126,6 @@ const EditorPage = () => {
 
   return (
     <div className="flex flex-row bg-[#F9FBFD] min-h-[100vh] px-4 pt-20 pb-20 h-full w-full justify-center items-sta">
-      {/*Editor FAB*/}
-      <SpeedDialFab
-        actions={editorPageSpeedDialActions}
-        open={openActionsFab}
-        setIsOpen={setOpenActionsFab}
-        onActionClicked={onActionClicked}
-      />
 
       {/*Toast*/}
       <Toast state={toastState} setState={setToastState} />

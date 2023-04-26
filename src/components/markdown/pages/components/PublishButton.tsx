@@ -10,7 +10,7 @@ const PublishButton: React.FC<Props> = ({ onPublishClicked }) => {
     <SpacingContainer direction="row-reverse">
         <button 
             onClick={onPublishClicked}
-            className="mb-[7px] w-fit hover:cursor-pointer  text-[12px] font-sans rounded-[10px] flex flex-row justify-center items-center "
+            className="font-[helvetica] mb-[7px] w-fit hover:cursor-pointer  text-[12px] rounded-[10px] flex flex-row justify-center items-center "
         >
             Publish&nbsp;
             <svg xmlns="http://www.w3.org/2000/svg" width="11" height="12" viewBox="0 0 11 12" fill="none">

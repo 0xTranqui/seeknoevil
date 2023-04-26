@@ -17,6 +17,11 @@ export function useMintExisting({tokenId, userAddress, onSuccessCB }: Props) {
 
     console.log(" address: ", ap1155Press)
 
+    if (!ap1155Press) {
+        console.error("The contract address is missing or invalid.");
+        return;
+    }    
+
     const validMint = !tokenId || !userAddress ? false : true 
 
     const { config, error } = usePrepareContractWrite({
@@ -32,7 +37,7 @@ export function useMintExisting({tokenId, userAddress, onSuccessCB }: Props) {
         // overrides: {} // hardcoded as zero for no but could also be dynamic based on prior read call
     })
     
-    console.log("prep config error", error)
+    console.log("mint existing prep config error", error)
 
     const { 
         write,

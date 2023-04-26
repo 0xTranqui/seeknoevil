@@ -29,29 +29,30 @@ const MintDialog: React.FC<Props> = ({ open, setOpen }) => {
 
 
     return (
-        <Dialog open={open} onClose={closeDialog} maxWidth={false} className="flex flex-row justify-center" >
-            {/* <DialogContent className={classes.dialogContent}> */}
-            <DialogContent className="grid grid-cols-[800px_400px] w-[1260px] h-[762px]">
-                <div className="bg-[#525252] flex flex-row h-full justify-center items-center">
-                    <div className=" bg-white flex flex-row w-[612px] h-[660px]">
-                        <Editor
-                            id="dialogue"
-                            className="w-full"
-                            disableExtensions={['container_notice']}
-                            defaultValue={editorContext.getEditorValue.current()}
-                            readOnly                
-                        />
-                    </div>
+        <Dialog
+          open={open}
+          onClose={closeDialog}
+          maxWidth={false}
+          className="flex flex-row justify-center custom-dialog"
+        >
+          <DialogContent className="grid grid-cols-[800px_430px] w-[1260px] h-[762px] custom-dialog-content">
+            <div className="bg-[#525252] py-[10px] flex flex-row justify-center items-center">
+              <div className=" bg-white flex flex-row w-[630px] overflow-y-auto">
+                <div className="editor-wrapper h-[762px] overflow-y-auto">
+                  <Editor
+                    id="dialogue"
+                    className="w-full px-10 mt-20"
+                    disableExtensions={['container_notice']}
+                    defaultValue={editorContext.getEditorValue.current()}
+                    readOnly
+                  />
                 </div>
-                <CreateForm />
-            </DialogContent>
-            {/* <DialogActions>
-                <Button onClick={closeDialog} color="primary">
-                Close
-                </Button>
-            </DialogActions> */}
-            </Dialog>
-        );
+              </div>
+            </div>
+            <CreateForm />
+          </DialogContent>
+        </Dialog>
+      );
     };
 
     export default MintDialog;

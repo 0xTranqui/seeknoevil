@@ -7,7 +7,6 @@ import EditorPage from '../components/markdown/pages/EditorPage/EditorPage';
 import { useChannelAdmins } from '../providers/ChannelAdminProvider';
 import { useAuth } from '../hooks/useAuth';
 
-
 export default function Create() {
 
   const { address } = useAuth()
@@ -25,7 +24,7 @@ export default function Create() {
           {`you do not have access to "create"`}
         </div>
       ) : (
-        <EditorContextProvider>
+      <EditorContextProvider>
         <EditorPage />
       </EditorContextProvider>
       )}
