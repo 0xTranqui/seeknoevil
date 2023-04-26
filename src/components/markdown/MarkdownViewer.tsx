@@ -1,8 +1,8 @@
 // @ts-nocheck
 
-import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import Editor from 'rich-markdown-editor';
+import { light as customTheme } from '../../styles/editorTheme'
 
 type Props = {
   ipfsPath: string;
@@ -50,12 +50,13 @@ const MarkdownViewer: React.FC<Props> = ({ ipfsPath }) => {
   }
 
   return (
-    <div className=" w-full h-fit pb-20 border-[#DCDCDC] bg-[#FFFFFF] leading flex flex-row items-start">        
+    <div className=" w-full h-fit pb-20 border-[#DCDCDC] leading flex flex-row items-start">        
       <Editor
-        className=" w-full items-start text-[17px] sm:text-[17px]"
+        className="editor-body-text w-full items-start text-[17px] sm:text-[17px]"
         disableExtensions={['container_notice']}
         defaultValue={content}
         readOnly
+        theme={customTheme}
       />
     </div>
   );

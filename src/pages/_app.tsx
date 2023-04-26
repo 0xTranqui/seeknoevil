@@ -9,6 +9,7 @@ import { Footer } from '../components';
 import { Header } from '../components';
 import { CurationDataProvider } from "../providers/CurationDataProvider"
 import { ChannelAdminProvider } from "../providers/ChannelAdminProvider"
+import { ENSResolverProvider } from '../providers/ENSResolverProvider';
 
 // determines what curation contract will be used for blog context
 const channel = process.env.NEXT_PUBLIC_AP_721_CURATION_CONTRACT;
@@ -24,12 +25,14 @@ function App({ Component, pageProps }: AppProps) {
       <ConnectKitProvider>
         <CurationDataProvider curationContract={channel} >
           <ChannelAdminProvider channelAdmin1={channelAdmin_1} channelAdmin2={channelAdmin_2}>
-            <NextHead>
-              <title>seeknoevil</title>
-            </NextHead>
-            <Header />
-            <Footer />
-            {mounted && <Component {...pageProps} />}
+            <ENSResolverProvider>
+              <NextHead>
+                <title>seeknoevil</title>
+              </NextHead>
+              <Header />
+              <Footer />
+              {mounted && <Component {...pageProps} />}
+            </ENSResolverProvider>
           </ChannelAdminProvider>
         </CurationDataProvider>
       </ConnectKitProvider>

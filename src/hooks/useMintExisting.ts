@@ -32,7 +32,7 @@ export function useMintExisting({tokenId, userAddress, onSuccessCB }: Props) {
         // overrides: {} // hardcoded as zero for no but could also be dynamic based on prior read call
     })
     
-    console.log("prep config error", error)
+    console.log("mint existing prep config error", error)
 
     const { 
         write,

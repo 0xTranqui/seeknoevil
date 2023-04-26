@@ -77,7 +77,7 @@ export function useMintWithData({mintWithDataConfig, tokenToCurate}: any) {
 
     console.log("curationData: ", curationData)
 
-    // Wait for data from bid call
+    // Wait for data from write call
     const { data: mintWaitData, isLoading: mintWaitLoading } = useWaitForTransaction({
         hash:  curationData?.hash,
         onSuccess(mintWaitData) {

@@ -20,7 +20,7 @@ function Secret() {
         tokenRenderer: "0x0a2bAD624b74b0093fDcFe22C447294b2c512e48",
         tokenRendererInit: {
             // tokenURI: tokenURI ? tokenURI : ""
-            tokenURI: "ipfs://bafkreid3izwzpsw7c6eja7qe4fsigsezroxpewvklvtopdakrxj42geyse"
+            tokenURI: "ipfs://bafkreidmmpqyljxkbybj5fhh3qrfvb3fq7ncspf3bps3re7modokqb7htu"
         },
         fundsRecipient: "0x153D2A196dc8f1F6b9Aa87241864B3e4d4FEc170",
         royaltyBPS: "0",
@@ -42,7 +42,7 @@ function Secret() {
       
       const [mintWithDataConfig, setMintWithDataConfig] = useState({
         // curatedAddress not calculated in state
-        selectedTokenId: "25",
+        selectedTokenId: "61",
         // curator address not calculated in state
         curatorTargetType: 4, // (1 = nft contract, 3 = curation contract, 4 = nft item)
         sortOrder: 0,
@@ -64,7 +64,7 @@ function Secret() {
         mintWaitLoading   
       } = useMintWithData({
         mintWithDataConfig: mintWithDataConfig,
-        tokenToCurate: "25"
+        tokenToCurate: "61"
       })        
 
 

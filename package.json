@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.12",
     "@headlessui/react": "^1.7.14",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
@@ -24,12 +25,14 @@
     "ethers": "^5.7.0",
     "file-saver": "^2.0.5",
     "formidable": "^2.1.1",
+    "graphql": "^16.6.0",
     "install": "^0.13.0",
     "marked": "^4.3.0",
     "nanoid": "^4.0.2",
     "next": "^13.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-toastify": "^9.1.2",
     "rich-markdown-editor": "^11.21.3",
     "sanitize-filename": "^1.6.3",
     "showdown": "^2.1.0",

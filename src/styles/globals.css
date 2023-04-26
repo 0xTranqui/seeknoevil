@@ -37,3 +37,54 @@
         height: auto;
     }
 }
+
+.dot-animation {
+    display: inline-flex;
+    align-items: flex-end;
+    position: relative;
+    width: 30px;
+    height: 14px;
+  }
+  
+  .dot-animation div {
+    position: absolute;
+    bottom: 0;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: #000;
+    animation: dot-animation 2s infinite;
+  }
+  
+  .dot-animation div:nth-child(1) {
+    left: 0;
+    animation-delay: 0.5s;
+  }
+  
+  .dot-animation div:nth-child(2) {
+    left: 5px;
+    animation-delay: 1s;
+  }
+  
+  .dot-animation div:nth-child(3) {
+    left: 10px;
+    animation-delay: 1.5s;
+  }
+  
+  @keyframes dot-animation {
+    0%, 20%, 40%, 60%, 80%, 100% {
+      opacity: 0;
+    }
+    10%, 30%, 50%, 70%, 90% {
+      opacity: 1;
+    }
+  }
+
+  .custom-dialog-content {
+    padding: 0px !important;
+    border-radius: 0 !important;
+  }
+
+  .custom-dialog {
+    border-radius: 0 !important;
+  }

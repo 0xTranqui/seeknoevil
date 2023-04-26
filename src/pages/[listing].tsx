@@ -217,20 +217,25 @@ const ListingPage: NextPage = () => {
     if (!mediaType) {
         return (
             <div className='text-[14px] flex flex-row flex-wrap  bg-[#FFFFFF] min-h-[100vh] pt-10 pb-[90px] sm:pb-[108px] h-full w-full justify-center sm:justify-start '>
-                <div className='pt-[80px] sm:pt-[110px] sm:px-[16px]'>
-                Loading...
-                </div>            
+            <div className='pt-[80px] sm:pt-[10px] sm:px-[16px]'>
+            loading
+            <span className="ml-[6px] dot-animation">
+              <div></div>
+              <div></div>
+              <div></div>
+            </span>
+            </div>                     
             </div>
         )
     } else if (mediaType === 'markdown') {
         return (
             <div className="text-[14px] flex flex-row flex-wrap  bg-[#FFFFFF] min-h-[100vh] pt-10 pb-[90px] sm:pb-[108px] h-full w-full justify-center ">
                 <div className=' w-[360px] sm:w-[500px] md:w-[625px] pt-[80px] sm:pt-[110px]'>
-                    <div className="font-[helvetica] flex flex-row w-full justify-start text-[26px] font-normal">
+                    <div className="font-[helvetica] flex flex-row w-full justify-start text-[24px] font-normal">
                         {title}
                     </div>
-                    <div className="font-[helvetica] italic flex flex-row w-full justify-start text-[15px] mt-[35px] sm:mt-[58px] mb-[6px]">
-                        <div className="font-[helvetica]">published by&nbsp;</div>
+                    <div className="font-[helvetica] flex flex-row w-full justify-start text-[15px] mt-[35px] sm:mt-[58px] mb-[6px]">
+                        <div className="font-[helvetica]">by&nbsp;</div>
                             <a href={`https://goerli.etherscan.io/address/${author}`} className="font-[helvetica] hover:underline">
                                 {shortenAddress(author)}
                             </a>

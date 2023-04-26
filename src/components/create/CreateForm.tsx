@@ -3,14 +3,45 @@
 import Image from 'next/image';
 import React, { useState, useRef, useEffect } from 'react';
 import { useEditorContext } from '../markdown/context/EditorContext'
-import { useMintNew } from '../../hooks/useMintNew'
-import { useMintWithData } from '../../hooks/useMintWithData'
+import { useMintAndCurate } from '../../hooks/useMintAndCurate'
 import {marked} from 'marked';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Link from 'next/link';
 
 const junghwan_eth = "0x4C53C6D546C9E38db56040Ab505460A9187A5281"
 const tranqui_eth = "0x806164c929Ad3A6f4bd70c2370b3Ef36c64dEaa8"
 
 const CreateForm = () => {
+
+  const showPublicationStatusToast = () => {
+    toast(
+      <div className="flex w-full items-center space-x-2 font-[helvetica]">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="10" cy="10" r="9.89691" fill="#5CF359" stroke="#52D325" stroke-width="0.206186"/>
+        <path d="M6.53483 8.68113L5.25781 10.103L8.8454 13.4327L14.8454 7.2277L13.6343 5.97925L8.8454 10.9544L6.53483 8.68113Z" fill="white"/>
+        </svg>
+        <div className="flex flex-row">
+          <div className='font-[helvetica]'>
+            {`"${tokenMetadata.name}"`}&nbsp;successfully published!
+          </div>
+          &nbsp;
+          <Link
+            href="/"
+            className='font-[helvetica] underline hover:font:bold'
+            >
+              Back to feed
+          </Link>
+        </div>
+      </div>,
+      {
+        position: toast.POSITION.BOTTOM_RIGHT,
+        autoClose: 5000,
+        toastClassName: 'custom-toast-container',
+        progressClassName: 'no-progress-bar'
+      }
+    );
+  };  
 
   const [mintNewConfig, setMintNewConfig] = useState({
       recipients: [junghwan_eth, tranqui_eth],
@@ -23,7 +54,6 @@ const CreateForm = () => {
       },
       tokenRenderer: "0x0a2bAD624b74b0093fDcFe22C447294b2c512e48",
       tokenRendererInit: {
-          // tokenURI: tokenURI ? tokenURI : ""
           tokenURI: ""
       },
       fundsRecipient: "0x153D2A196dc8f1F6b9Aa87241864B3e4d4FEc170",
@@ -31,26 +61,10 @@ const CreateForm = () => {
       primarySaleFeeRecipient: "0x153D2A196dc8f1F6b9Aa87241864B3e4d4FEc170",
       primarySaleFeeBPS: "0",
       soulbound: "false"
-  })
-
-  // const {
-  //   config,
-  //   error,
-  //   write,
-  //   writeAsync,
-  //   data,
-  //   isError,
-  //   isLoading,
-  //   isSuccess,
-  //   status,
-  //   mintNewData,
-  //   mintNewLoading,
-  //   tokenIdMinted    
-  // } = useMintNew({
-  //   mintNewConfig: mintNewConfig
-  // })
+  }) 
 
   const {
+    // mintNew returns
     write,
     writeAsync,
     data,
@@ -59,21 +73,9 @@ const CreateForm = () => {
     isSuccess,
     status,
     tokenIdMinted,
-  } = useMintNew({ mintNewConfig });  
-
-  console.log("tokenIdMinted", tokenIdMinted)
-
-  const [mintWithDataConfig, setMintWithDataConfig] = useState({
-    // curatedAddress not calculated in state
-    selectedTokenId: "",
-    // curator address not calculated in state
-    curatorTargetType: 4, // (1 = nft contract, 3 = curation contract, 4 = nft item)
-    sortOrder: 0,
-    hasTokenId: true,
-    chainId: 5    
-  })
-
-  const {
+    mintNewData,
+    mintNewLoading,
+    // mintWithData returns,
     curationConfig,
     curationError,
     curationWrite,
@@ -84,17 +86,11 @@ const CreateForm = () => {
     curationIsSuccess,
     curationStatus,
     mintWaitData,
-    mintWaitLoading   
-  } = useMintWithData({
-    mintWithDataConfig: mintWithDataConfig,
-    tokenToCurate: tokenIdMinted
-  })  
+    mintWaitLoading       
+  } = useMintAndCurate({ mintNewConfig });    
 
   // publishing markdown to ipfs 
   const editorContext = useEditorContext()
-  // const [isPublishing, setIsPublishing] = useState(false);
-  // const [publishError, setPublishError] = useState(false);
-  // const [publishedCid, setPublishedCid] = useState('')
 
   // handling inputs for tokenMetadata + mint price
   const [tokenMetadata, setTokenMetadata] = useState({
@@ -142,31 +138,6 @@ const CreateForm = () => {
         animation_url: path,
     }));
   };
-
-  // const handleTokenURI = (uri) => {
-  //   setMintNewConfig((prevConfig) => ({
-  //       ...prevConfig,
-  //       tokenRendererInit: {
-  //         tokenURI: uri
-  //       }
-  //   }));
-  // };  
-
-  const handleTokenURI = (tokenURI, callback) => {
-    setMintNewConfig((prevConfig) => {
-      return {
-        ...prevConfig,
-        tokenRendererInit: {
-          ...prevConfig.tokenRendererInit,
-          tokenURI: tokenURI,
-        },
-      };
-    });
-    if (callback) {
-      console.log("running callback after handleTokenURI")
-      callback();
-    }
-  };  
 
   // handling image upload
   const [thumbnail, setThumbnail] = useState(null);
@@ -236,216 +207,90 @@ const CreateForm = () => {
     }
   }
 
-  const [minting, setMinting] = useState(false)
-  const [publicationSuccess, setPublicationSucess] = useState(false)
-
-  // tbd form submit / mint button?
-  const pinAndMint = async () => {
+  const pin = async () => {
     try {
       const animationUrl = await handleMarkdownUpload();
-      // const tokenURI = "ipfs://" + await handleMetadataUpload(animationUrl);
-      handleTokenURI("ipfs://" + await handleMetadataUpload(animationUrl))
-      // await handleTokenURI(tokenURI)
-      write()
-    } catch (err) {
-      console.error("Error in minting process")
-    }
-  };
-
-  // const justPin = async () => {
-  //   try {
-  //     const animationUrl = await handleMarkdownUpload();
-  //     const tokenURI = "ipfs://" + await handleMetadataUpload(animationUrl);
-  //     console.log("tokenURI")
-  //     handleTokenURI(tokenURI)
-  //   } catch (err) {
-  //     console.error("Error in minting process")
-  //   }
-  // }
-
-  // const justPin = async () => {
-  //   try {
-  //     const animationUrl = await handleMarkdownUpload();
-  //     const tokenURI = "ipfs://" + await handleMetadataUpload(animationUrl);
-  //     console.log("tokenURI");
-  //     handleTokenURI(tokenURI, () => {
-  //       mintNewToken();
-  //     });
-  //   } catch (err) {
-  //     console.error("Error in minting process");
-  //   }
-  // };  
-
-  // const justPin = async () => {
-  //   try {
-  //     const animationUrl = await handleMarkdownUpload();
-  //     const tokenURI = "ipfs://" + await handleMetadataUpload(animationUrl);
-  //     console.log("tokenURI", tokenURI);
-  //     handleTokenURI(tokenURI);
-  //     setMintingStep(2);
-  //   } catch (err) {
-  //     console.error("Error in minting process");
-  //     setMintingStep(0);
-  //   }
-  // };  
-
-  const justPin = async () => {
-    try {
-      const animationUrl = await handleMarkdownUpload();
-      const tokenURI = "ipfs://" + await handleMetadataUpload(animationUrl);
-      console.log("tokenURI", tokenURI);
-      handleTokenURI(tokenURI, () => {
-        mintNewToken();
-      });
+      const tokenURI = "ipfs://" + (await handleMetadataUpload(animationUrl));
+      console.log("tokenURI logged in justPin", tokenURI);
+      handleTokenURI(tokenURI)
+      setMintingStep(1)
     } catch (err) {
       console.error("Error in minting process");
     }
-  };    
-
-
-  const mintNewToken = async () => {
-    write?.()
-    // writeAsync?.()
-    setMintWithDataConfig((prevConfig) => ({
-      ...prevConfig,
-      selectedTokenId: tokenIdMinted
-    }));
   }
-
-  const curateMintedToken = async () => {
-    curationWrite?.()
-    // curationWriteAsync?.()
-    setPublicationSucess(true)
-  }
-
-
-
-  const [mintingStep, setMintingStep] = useState(0);
-
-  const fullPublicationCycle = async () => {
-    setMinting(true);
-    setMintingStep(1);
+  const handleTokenURI = async (tokenURI) => {
+    console.log("handleTokenURI running");
+    setMintNewConfig((prevConfig) => {
+      return {
+        ...prevConfig,
+        tokenRendererInit: {
+          ...prevConfig.tokenRendererInit,
+          tokenURI: tokenURI,
+        },
+      };
+    });
   };
 
-  // // Observe mintingStep and trigger justPin when mintingStep is 1
-  // useEffect(() => {
-  //   if (mintingStep === 1) {
-  //     justPin()
-  //       .then(() => setMintingStep(2))
-  //       .catch((err) => {
-  //         console.error("Error in minting process", err);
-  //         setMintingStep(0);
-  //         setMinting(false);
-  //       });
-  //   }
-  // }, [mintingStep]);
+  const [tokenHasBeenMinted, setTokenHasBeenMinted] = useState(false)
 
-  // Observe mintingStep and trigger justPin when mintingStep is 1
+  // trigger mint once cover image is pinned and state has updated
   useEffect(() => {
-    if (mintingStep === 1) {
-      justPin()
-        .then((cid) => {
-          if (cid) {
-            setMintNewConfig((prevConfig) => {
-              return {
-                ...prevConfig,
-                tokenRendererInit: {
-                  ...prevConfig.tokenRendererInit,
-                  tokenURI: cid,
-                },
-              };
-            });
-            setMintingStep(2);
-          } else {
-            console.error("Error: No CID returned after pinning");
-            setMintingStep(0);
-          }
-        })
-        .catch((err) => {
-          console.error("Error in minting process", err);
-          setMintingStep(0);
-        });
+    if (!!mintNewConfig.tokenRendererInit.tokenURI && !tokenHasBeenMinted && !!write) {
+      setTokenHasBeenMinted(true)
+      write();        
     }
-  }, [mintingStep]);  
+  }, [mintNewConfig.tokenRendererInit.tokenURI, write]);  
 
+  // trigger success toast once curation success == true + transaction has settled
   useEffect(() => {
-    if (
-      mintNewConfig &&
-      mintNewConfig.tokenRendererInit &&
-      mintNewConfig.tokenRendererInit.tokenURI &&
-      mintingStep === 2
-    ) {
-      mintNewToken();
+    if (curationIsSuccess && !mintWaitLoading) {
+      showPublicationStatusToast();
     }
-  }, [mintNewConfig, mintingStep]);  
+  }, [curationIsSuccess, mintWaitLoading]);
 
-  // Observe tokenIdMinted and trigger mintNewToken when tokenIdMinted is updated
-  useEffect(() => {
-    if (tokenIdMinted) {
-      mintNewToken()
-        .then(() => setMintingStep(3))
-        .catch((err) => {
-          console.error("Error while minting new token", err);
-          setMintingStep(0);
-          setMinting(false);
-        });
+  const svgLoader = () => {
+    return (
+        <svg fill="#fff" width="38" height="20" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+              <linearGradient x1="8.042%" y1="0%" x2="65.682%" y2="23.865%" id="a">
+                  <stop stop-color="#fff" stop-opacity="0" offset="0%"/>
+                  <stop stop-color="#fff" stop-opacity=".631" offset="63.146%"/>
+                  <stop stop-color="#fff" offset="100%"/>
+              </linearGradient>
+          </defs>
+          <g fill="none" fill-rule="evenodd">
+              <g transform="translate(1 1)">
+                  <path d="M36 18c0-9.94-8.06-18-18-18" id="Oval-2" stroke="url(#a)" stroke-width="2">
+                      <animateTransform
+                          attributeName="transform"
+                          type="rotate"
+                          from="0 18 18"
+                          to="360 18 18"
+                          dur="0.9s"
+                          repeatCount="indefinite" />
+                  </path>
+                  <circle fill="#fff" cx="36" cy="18" r="1">
+                      <animateTransform
+                          attributeName="transform"
+                          type="rotate"
+                          from="0 18 18"
+                          to="360 18 18"
+                          dur="0.9s"
+                          repeatCount="indefinite" />
+                  </circle>
+              </g>
+          </g>
+      </svg> 
+      )
     }
-  // }, [tokenIdMinted]);
-}, [tokenIdMinted, mintNewConfig]);
-
-  // Observe curationStatus and trigger curateMintedToken when curationStatus is "success"
-  useEffect(() => {
-    if (curationStatus === "success") {
-      curateMintedToken()
-        .then(() => {
-          setMintingStep(0);
-          setPublicationSucess(true);
-          setMinting(false);
-        })
-        .catch((err) => {
-          console.error("Error while curation minted token", err);
-          setMintingStep(0);
-          setMinting(false);
-        });
-    }
-  }, [curationStatus]);  
-
-  // const fullPublicationCycle = async () => {
-  //   setMinting(true);
   
-  //   try {
-  //     await justPin();
-  //     await mintNewToken();
-  //     await curateMintedToken();
-  //   } catch (err) {
-  //     console.error("Error during the publication cycle:", err.message);
-  //   } finally {
-  //     setMinting(false);
-  //   }
-  // };
-
-  // const fullPublicationCycle = async () => {
-  //   setMinting(true)
-  //   try {
-  //     await justPin()
-  //   } catch (err) {
-  //     console.error("Error during pinning process")
-  //   } try {
-  //     await mintNewToken()
-  //   } catch (err) {
-  //     console.error("Error while minting new token")
-  //   } try {
-  //     await curateMintedToken()
-  //   } catch (err) {
-  //     console.error("Error while curation minted token")
-  //   } finally {
-  //     setMinting(false)
-  //   }
-  // }
+  const publicationStatus = isLoading || mintNewLoading || curationIsLoading || mintWaitLoading
+    ? svgLoader()
+    : "publish"
 
   return (
-    // <form onSubmit={handleSubmit} className="font-sans pl-4 flex flex-row flex-wrap justify-center items-start ">
-    <div className="pl-4 flex flex-row flex-wrap justify-center items-start ">
+    <div className=" h-[700px] pl-8 flex flex-row flex-wrap w-full justify-center items-center">
+      <ToastContainer hideProgressBar={true} style={{width: "620px"}} />
       <h1 className="flex font-[helvetica] flex-row w-full h-fit  text-[18px]">Publish</h1>
       <>
       
@@ -478,7 +323,7 @@ const CreateForm = () => {
                 className="flex flex-row w-full justify-center items-center h-[209px] border-[1.2px] border-[#E1E1E1] rounded-[8px]"
               >                
                 <div className='flex flex-row justify-center w-full'>
-                <svg fill="#000000" width="38" height="20" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+                <svg fill="#000000" width="76" height="40" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient x1="8.042%" y1="0%" x2="65.682%" y2="23.865%" id="a">
                             <stop stop-color="#000000" stop-opacity="0" offset="0%"/>
@@ -579,40 +424,17 @@ const CreateForm = () => {
         />
       </div>
 
-      <div className="font-[helvetica] flex flex-row justify-start space-x-1 w-full h-fit">
+      <div className="font-[helvetica] flex flex-row justify-end space-x-1 w-full h-fit">
         <button 
-            onClick={()=>fullPublicationCycle()}
-            className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
-          >
-            mint
-        </button>
-        {/* <button 
-          onClick={()=>justPin()}
-          className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
+          onClick={
+            ()=>{
+              pin()
+            }}
+          className="text-[13px] w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white flex flex-row justify-center items-center"
         >
-            pin
-        </button>
-        <button 
-          // onClick={()=>write()}
-          onClick={()=>mintNewToken()}
-          className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
-        >
-            mint
-        </button>    
-        <button 
-          // onClick={()=>write()}
-          onClick={()=>curationWrite()}
-          className="w-[73px] py-2 rounded-[5.3px] border-[1.2px] border-black bg-black text-white hover:text-black hover:bg-white"
-        >
-            curate
-        </button>                */}
+          {publicationStatus}
+        </button>           
       </div>
-      
-
-      {/* <button type="submit" className="bg-blue-500 text-white px-4 py-2">
-        Submit
-      </button> */}
-    {/* </form> */}  
     </div>
   );
 };
