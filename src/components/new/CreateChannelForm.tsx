@@ -90,11 +90,48 @@ const CreateChannelForm: React.FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission, e.g., call your contract creation function here
-    console.log("config at the last second:", config)
     write?.()
-    console.log(formData);
   };
+
+  const svgLoader = () => {
+    return (
+        <svg fill="#fff" width="38" height="20" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+              <linearGradient x1="8.042%" y1="0%" x2="65.682%" y2="23.865%" id="a">
+                  <stop stop-color="#fff" stop-opacity="0" offset="0%"/>
+                  <stop stop-color="#fff" stop-opacity=".631" offset="63.146%"/>
+                  <stop stop-color="#fff" offset="100%"/>
+              </linearGradient>
+          </defs>
+          <g fill="none" fill-rule="evenodd">
+              <g transform="translate(1 1)">
+                  <path d="M36 18c0-9.94-8.06-18-18-18" id="Oval-2" stroke="url(#a)" stroke-width="2">
+                      <animateTransform
+                          attributeName="transform"
+                          type="rotate"
+                          from="0 18 18"
+                          to="360 18 18"
+                          dur="0.9s"
+                          repeatCount="indefinite" />
+                  </path>
+                  <circle fill="#fff" cx="36" cy="18" r="1">
+                      <animateTransform
+                          attributeName="transform"
+                          type="rotate"
+                          from="0 18 18"
+                          to="360 18 18"
+                          dur="0.9s"
+                          repeatCount="indefinite" />
+                  </circle>
+              </g>
+          </g>
+      </svg> 
+      )
+    }
+  
+  const createStatus = isLoading || createChannelLoading
+    ? svgLoader()
+    : "create"  
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto grid grid-cols-2 gap-4">
@@ -154,7 +191,7 @@ const CreateChannelForm: React.FC = () => {
 
     <div className="col-span-2">
       <label htmlFor="curationPass" className="block text-sm font-medium text-gray-700">
-        Curation Pass (optional):
+        ERC721 Curation Pass (optional):
       </label>
       <input
         type="text"
@@ -168,11 +205,27 @@ const CreateChannelForm: React.FC = () => {
         <button
         disabled={!initialOwnerInput ? true : false}
         type="submit"
-        className="w-full py-2 px-4 text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        className="w-full flex flex-row justify-center py-2 px-4 text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-        Create
+        {createStatus}
         </button>
     </div>
+    <>
+      {isSuccess && !createChannelLoading ? (
+        <div className="col-span-2 flex flex-row flex-wrap ">
+          <div className="flex flex-row w-full">
+            {"collection successfully deployed at: "}
+          </div>
+          <a 
+          href={`https://sepolia.etherscan.io/address/${createChannelData?.logs?.[0]?.address}`}
+          className="hover:underline flex flex-row w-full">
+            {`${createChannelData?.logs?.[0]?.address} ->`}
+          </a>          
+        </div>
+      ) : (
+        <></>
+      )}
+      </>    
     </form>        
   );
 };
