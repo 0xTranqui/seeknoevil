@@ -8,6 +8,8 @@ import { utils } from "ethers";
 
 export function useMintWithData({mintWithDataConfig, tokenToCurate}: any) {
 
+    console.log("mintwithdataconfig", mintWithDataConfig)
+
     const { address } = useAuth()
 
     const msgSender = address ? address : ""
@@ -17,7 +19,7 @@ export function useMintWithData({mintWithDataConfig, tokenToCurate}: any) {
     
     const mintingConfig = mintWithDataConfig ? mintWithDataConfig : null
 
-    const validMint = !mintingConfig || !tokenToCurate ? false : true
+    const validMint = !mintingConfig || !tokenToCurate || !address ? false : true
 
     console.log("is token coming through? ", tokenToCurate)
     

@@ -2,16 +2,17 @@
 import { getDefaultClient } from 'connectkit';
 // wagmi
 import { createClient, configureChains } from 'wagmi';
-import { mainnet, goerli } from 'wagmi/chains';
+import { mainnet, goerli, sepolia } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
-const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_KEY_GOERLI;
+// const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_KEY_GOERLI;
+const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_KEY_SEPOLIA;
 
 const { provider, chains } = configureChains(
-  [goerli],
+  [sepolia],
   [
-    alchemyProvider({ apiKey: alchemyId as string }),
+    // alchemyProvider({ apiKey: alchemyId as string }),
     publicProvider()
   ]
 );
