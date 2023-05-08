@@ -42,7 +42,7 @@ export function useMintExisting({tokenId, userAddress, onSuccessCB }: Props) {
         isLoading,
         isSuccess,
         status
-    } = useContractWrite()      
+    } = useContractWrite(config)      
 
     // Wait for data from mintExisting call
     const { data: mintExistingData, isLoading: mintExistingLoading } = useWaitForTransaction({

@@ -10,7 +10,7 @@ export function useMintAndCurate({mintNewConfig}: any) {
 
     const [tokenIdMinted, setTokenIdMinted] = useState(0)
 
-    const {address, signer} = useAuth()
+    const {address} = useAuth()
 
     const ap721Press = process.env.NEXT_PUBLIC_AP_721_CURATION_CONTRACT ? process.env.NEXT_PUBLIC_AP_721_CURATION_CONTRACT : ""
     const ap1155Press = process.env.NEXT_PUBLIC_AP_1155_CONTRACT ? process.env.NEXT_PUBLIC_AP_1155_CONTRACT : ""
@@ -53,6 +53,8 @@ export function useMintAndCurate({mintNewConfig}: any) {
         // overrides: {} // hardcoded as zero for no but should be dynamic based on prior read call
     })
     
+    console.log("prep config:", config)
+
     console.log("prep config error", error)
 
     const { 
@@ -105,7 +107,7 @@ export function useMintAndCurate({mintNewConfig}: any) {
                             BigNumber.from(tokenIdMinted), // selected token Id
                             address, // curator
                             0, // "sort order"
-                            5, // "chainId",
+                            11155, // "chainId",
                             4, // curationTarget type
                             true // hasTokenId
                         ]

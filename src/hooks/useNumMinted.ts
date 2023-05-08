@@ -1,39 +1,52 @@
-// @ts-nocheck
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from './useAuth';
 
 type Props = {
-    collectionAddress: string,
-    tokenId: string
+  collectionAddress: string;
+  tokenId: string;
 };
 
 const useNumMinted = ({ collectionAddress, tokenId }: Props) => {
+  const { address } = useAuth();
+  const userAddress = address
+    ? address
+    : '0x0000000000000000000000000000000000000000';
+  const [numMinted, setNumMinted] = useState('0');
+  const [error, setError] = useState(null); // Add error state
 
-    const { address } = useAuth()
-    const userAddress = address ? address : "0x0000000000000000000000000000000000000000"
-    const [numMinted, setNumMinted] = useState("0")
+  const fetchNumMinted = async () => {
+    if (!collectionAddress || !tokenId) {
+      return;
+    }
+    fetch(
+      `https://sepolia.ether.actor/${collectionAddress}/numMinted/${tokenId}/${userAddress}`
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error fetching num minted: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then((data) => {
+        console.log('num minted = ', data);
+        setNumMinted(data);
+        setError(null); // Clear the error state
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        setError(error); // Update the error state
+      });
+    return;
+  };
 
-    const fetchNumMinted = async () => {
-        if (!collectionAddress || !tokenId) {
-            return
-        }                
-        fetch(`https://goerli.ether.actor/${collectionAddress}/numMinted/${tokenId}/${userAddress}`)   
-            .then(response => response.text())
-            .then((data) => {
-                console.log("num minted = ", data)
-                setNumMinted(data)
-            })
-        return
-    }    
+  // run fetchNumMinted fetch on any change to userAddress
+  useEffect(() => {
+    fetchNumMinted();
+  }, [userAddress, collectionAddress, tokenId]);
 
-    // run fetchNumMinted fetch on any change to userAddress
-    useEffect(() => {
-        fetchNumMinted()        
-    },
-    [userAddress, collectionAddress, tokenId]
-    )   
+  console.log("num minted", numMinted)
 
-    return { numMinted, fetchNumMinted }
+  return { numMinted, fetchNumMinted, error }; // Return the error state as well
 };
 
 export default useNumMinted;

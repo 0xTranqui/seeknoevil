@@ -236,7 +236,7 @@ const ListingPage: NextPage = () => {
                     </div>
                     <div className="font-[helvetica] flex flex-row w-full justify-start text-[15px] mt-[35px] sm:mt-[58px] mb-[6px]">
                         <div className="font-[helvetica]">by&nbsp;</div>
-                            <a href={`https://goerli.etherscan.io/address/${author}`} className="font-[helvetica] hover:underline">
+                            <a href={`https://sepolia.etherscan.io/address/${author}`} className="font-[helvetica] hover:underline">
                                 {shortenAddress(author)}
                             </a>
                             &nbsp;{"– " + publicationDate}

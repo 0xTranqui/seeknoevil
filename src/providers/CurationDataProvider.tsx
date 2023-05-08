@@ -35,6 +35,10 @@ export function CurationDataProvider({ children, curationContract }: CurationDat
         return formattedDate
     }    
     // Initializing Alchemy indexer configs
+    const alchemy_setting_sepolia = {
+      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY_SEPOLIA,
+      network: Network.ETH_SEPOLIA,
+  };    
     const alchemy_setting_goerli = {
         apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY_GOERLI,
         network: Network.ETH_GOERLI,
@@ -45,20 +49,21 @@ export function CurationDataProvider({ children, curationContract }: CurationDat
     };      
 
     // Initializing Alchemy indexer instances
+    const alchemySepolia = new Alchemy(alchemy_setting_sepolia);
     const alchemyGoerli = new Alchemy(alchemy_setting_goerli);
     const alchemyMainnet = new Alchemy(alchemy_settings_mainnet);    
 
     const parseMetadata = async (metadata: any) => {
       let parsedNFTs = {}
       for (const [key, value] of Object.entries(metadata)) {
-        if (key < 25) continue // temproary fix because alchemy doesnt pick up burned tokens well
+        // if (key < 25) continue // temproary fix because alchemy doesnt pick up burned tokens well
         if (value.rawMetadata.properties.curationTargetType == "1") {
           // hardcode tokenId = 1 if the curation type is an nft contract
-          let nftData = await alchemyGoerli.nft.getNftMetadata(value.rawMetadata.properties.contract, "1")   
+          let nftData = await alchemySepolia.nft.getNftMetadata(value.rawMetadata.properties.contract, "1")   
           parsedNFTs[key] = nftData
         } else if (value.rawMetadata.properties.curationTargetType == "4") {
           // dynamically get tokenId from proerties if the curation type is an nft item 
-          let nftData = await alchemyGoerli.nft.getNftMetadata(value.rawMetadata.properties.contract, value.rawMetadata.properties.selectedTokenId) 
+          let nftData = await alchemySepolia.nft.getNftMetadata(value.rawMetadata.properties.contract, value.rawMetadata.properties.selectedTokenId) 
           parsedNFTs[key] = nftData
         }
       }      
@@ -66,7 +71,7 @@ export function CurationDataProvider({ children, curationContract }: CurationDat
     }        
 
     const getMetadata = async () => {
-      const curationInfo: any = await alchemyGoerli.nft.getNftsForContract(contract)
+      const curationInfo: any = await alchemySepolia.nft.getNftsForContract(contract)
       let taggedData = {}
         for (let i = 0; i < curationInfo.nfts.length; i++) {
           const tokenId = curationInfo.nfts[i].tokenId;
