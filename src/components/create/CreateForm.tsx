@@ -11,6 +11,7 @@ import Link from 'next/link';
 
 const junghwan_eth = "0x4C53C6D546C9E38db56040Ab505460A9187A5281"
 const tranqui_eth = "0x806164c929Ad3A6f4bd70c2370b3Ef36c64dEaa8"
+const devtest_eth = "0xF2365A26f766109b5322B0f90d71c21bF32bda04"
 
 const CreateForm = () => {
 
@@ -44,15 +45,15 @@ const CreateForm = () => {
   };  
 
   const [mintNewConfig, setMintNewConfig] = useState({
-      recipients: [junghwan_eth, tranqui_eth],
+      recipients: [junghwan_eth, tranqui_eth, devtest_eth],
       quantity: "1",
-      tokenLogic: "0x7Bc662793a16769777172A3a2c029A16BdC7E038",
+      tokenLogic: "0x7218E2714d1C29FBda6E528F6b65E1216Cd2a73A",
       tokenLogicInit: {
           initialAdmin: "0x153D2A196dc8f1F6b9Aa87241864B3e4d4FEc170",
           mintExistingStartTime: "0",
           mintExistingPrice: "0"
       },
-      tokenRenderer: "0x0a2bAD624b74b0093fDcFe22C447294b2c512e48",
+      tokenRenderer: "0x4E1AD7A0D2e25Fb80AE8B18aFc90243C07f4aED9",
       tokenRendererInit: {
           tokenURI: ""
       },
