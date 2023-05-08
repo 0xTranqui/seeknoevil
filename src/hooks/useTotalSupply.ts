@@ -13,7 +13,7 @@ const useTotalSupply = ({ collectionAddress, tokenId }: Props) => {
     if (!collectionAddress || !tokenId) {
       return;
     }
-    fetch(`https://goerli.ether.actor/${collectionAddress}/totalSupply/${tokenId}`)
+    fetch(`https://sepolia.ether.actor/${collectionAddress}/totalSupply/${tokenId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Error fetching total supply: ${response.status}`);
