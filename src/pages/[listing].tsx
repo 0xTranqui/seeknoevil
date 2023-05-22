@@ -13,6 +13,7 @@ import ListingInfo from '../components/mintSection/ListingInfo';
 import useNumMinted from '../hooks/useNumMinted';
 import useTotalSupply from '../hooks/useTotalSupply';
 import VideoPlayer from '../components/video/VideoPlayer';
+import useENSResolver from '../hooks/useENSResolver';
 
 const ListingPage: NextPage = () => {
     const router = useRouter(); 
@@ -191,6 +192,7 @@ const ListingPage: NextPage = () => {
 
     const title = parsed && parsed[listingId]?.title
     const author = parsed && parsed[listingId]?.contract.contractDeployer
+    const resolvedAuthor = useENSResolver({ address: "0x806164c929Ad3A6f4bd70c2370b3Ef36c64dEaa8" })
     const description = parsed && parsed[listingId]?.description
 
     const convertDate = (date) => {
@@ -237,7 +239,7 @@ const ListingPage: NextPage = () => {
                     <div className="font-[helvetica] flex flex-row w-full justify-start text-[15px] mt-[35px] sm:mt-[58px] mb-[6px]">
                         <div className="font-[helvetica]">by&nbsp;</div>
                             <a href={`https://sepolia.etherscan.io/address/${author}`} className="font-[helvetica] hover:underline">
-                                {shortenAddress(author)}
+                                {resolvedAuthor ? resolvedAuthor : shortenAddress(author)}
                             </a>
                             &nbsp;{"– " + publicationDate}
                     </div>            
