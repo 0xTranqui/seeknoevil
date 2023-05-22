@@ -85,6 +85,7 @@ const EditorPage = () => {
       message: 'We only support images up to 5mb. Please try again.',
     });
   }, [setInfoDialogState]);
+
   const uploadImage = async (file: File): Promise<string> => {
 
     if (!checkUploadSize(file.size)) {
@@ -96,7 +97,8 @@ const EditorPage = () => {
       throw Error('Unsupported file type');
     }
 
-    return getCidGatewayUrl(await editorContext.uploadImage(file));
+    // return getCidGatewayUrl(await editorContext.uploadImage(file));
+    return getCidGatewayUrl(await editorContext.uploadImageV2(file));
   };
 
   const onImageUploadStart = () => {

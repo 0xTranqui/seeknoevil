@@ -1,3 +1,5 @@
+import { Web3Storage } from 'web3.storage';
+
 export const getCid = (cidOrPrefixedUrl: string): string => {
   return cidOrPrefixedUrl.replace('ipfs://', '');
 };
@@ -16,3 +18,23 @@ export const isIpfsCid = (possibleCid: string): boolean => {
 
   return isV0Cid || isV1Cid;
 };
+
+export const storeThing = async (client: any, ipfsFile: any) => {
+  const cid = await client.put([ipfsFile], {
+    wrapWithDirectory: false,
+  });
+  if (!cid) {
+    throw new Error('Failed to upload file to IPFS, no CID returned');
+  }
+  return cid;
+}
+
+export const makeStorageClient = () => {
+  const storageToken = process.env.NEXT_PUBLIC_WEB3_STORAGE_KEY;
+
+  if (storageToken == null) {
+    throw Error('Web3 Storage token not defined');
+  }
+
+  return new Web3Storage({ token: storageToken });
+}

@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import { getFilesFromPath } from 'web3.storage';
-
+import fs from 'fs';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { uploadToIpfs } from '../../components/markdown/server/uploadToIpfs';
 import sendInvalidRequestResponse from '../../components/markdown/server/util/sendInvalidRequestResponse';
@@ -24,40 +24,49 @@ type UploadRequest = {
 };
 
 // Parses the file sent in the multipart form data under form.file
-const parseRequest = async (
-  req: NextApiRequest
-): Promise<UploadRequest | undefined> => {
+const parseRequest = async (req: NextApiRequest): Promise<UploadRequest | undefined> => {
   const form = formidable({
     maxFileSize: MAX_UPLOAD_SIZE,
   });
 
-  return new Promise<UploadRequest | undefined>((resolve) => {
-    // Parse files from form
-    form.parse(req, (err, fields, files) => {
+  return new Promise<UploadRequest | undefined>((resolve, reject) => {
+    form.parse(req, async (err, fields, files) => {
+      console.log('Files:', files);
+      console.log('Error:', err);
 
-        if (files && files.file && 'filepath' in files.file) {
-        
+      if (err) {
+        reject(err);
+        return;
+      }
+
+
+
+      if (files && files.file) {
         const file = files.file;
+        let buffer: Buffer;
 
-        // Check the file keyed by "file"
-        if (!checkUploadSize(file.size)) {
-          console.log('Invalid file sent', file);
-          resolve(undefined);
+        console.log('File check in mint.ts:', file);
+        if (file instanceof formidable.File) {
+          buffer = await fs.promises.readFile(file.filepath);
+        } else if (file instanceof Buffer) {
+          buffer = file;
+        } else {
+          reject(new Error('Invalid file input'));
           return;
         }
 
-        const sentFilepath = file.filepath as string;
-
-        // Retrieve the file from the filepath
-        getFilesFromPath([sentFilepath]).then((files) => {
-          if (files.length > 0) {
-            resolve({
-              file: files[0] as unknown as File,
-            });
-          } else {
-            resolve(undefined);
-          }
-        });
+        if (checkUploadSize(buffer.length)) {
+          resolve({
+            file: {
+              name: file.name,
+              type: file.type,
+              size: buffer.length,
+              arrayBuffer: buffer,
+            },
+          });
+        } else {
+          resolve(undefined);
+        }
       } else {
         resolve(undefined);
       }
@@ -65,11 +74,11 @@ const parseRequest = async (
   });
 };
 
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ApiMintResponse>
 ) {
-
   if (req.method !== 'POST') {
     sendInvalidRequestResponse(res);
     return;

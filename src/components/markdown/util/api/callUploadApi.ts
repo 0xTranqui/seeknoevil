@@ -10,9 +10,12 @@ const callUploadApi = async (file: File): Promise<ApiUploadResponse> => {
     body: formData,
   });
 
+  if (!uploadResult.ok) {
+    throw new Error(`Upload failed with status ${uploadResult.status}`);
+  }
 
   return uploadResult.json();
-  
 };
+
 
 export default callUploadApi;

@@ -1,6 +1,7 @@
 import { ApiMintResponse } from '../../../../pages/api/mint';
+import { Buffer } from 'buffer';
 
-const callUploadApi = async (file: File): Promise<ApiMintResponse> => {
+const callMintApi = async (file: File): Promise<ApiMintResponse> => {
   
   console.log("what is the file like?", file)
   
@@ -8,24 +9,22 @@ const callUploadApi = async (file: File): Promise<ApiMintResponse> => {
   const formData = new FormData();
   formData.append('file', file);
 
-  console.log("file.type", file.type)
+  for (let [key, value] of formData.entries()) {
+    console.log(key, value);
+  }
 
-//   const uploadResult = await fetch('/api/mint', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: file,
-//   });
+  console.log("file.type", file.type)
 
   const uploadResult = await fetch('/api/mint', {
     method: 'POST',
     body: formData,
   });
 
+  console.log(uploadResult.status)
+
   console.log("mint result :", uploadResult)
 
   return uploadResult.json();
 };
 
-export default callUploadApi;
+export default callMintApi;

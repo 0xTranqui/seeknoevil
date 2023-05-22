@@ -21,6 +21,7 @@ import React, {
     saveMarkdownDataToLocalStorage,
   } from '../../../utils/localStorageUtils';
   import EditorSettings from '../types/EditorSettings';
+  import { storeThing, makeStorageClient } from '../../../utils/cidUtils';
   
   type EditorState = MarkdownFileData;
   
@@ -38,6 +39,7 @@ import React, {
     setPassword(val: string): void;
     // Functions
     uploadImage(file: File): Promise<string>;
+    uploadImageV2(file: File): Promise<string>;
     uploadTokenMetadata(file: File): Promise<string>;
     publishMarkdown(): Promise<string>;
     downloadMarkdown(): void;
@@ -60,6 +62,9 @@ import React, {
     async uploadImage() {
       return '';
     },
+    async uploadImageV2() {
+      return '';
+    },    
     async uploadTokenMetadata() {
       return '';
     },    
@@ -121,6 +126,17 @@ import React, {
       }
   
       throw Error('No CID in response: ' + JSON.stringify(uploadResponse));
+    };
+
+    const uploadImageV2 = async (file: File): Promise<string> => {
+
+      const client = makeStorageClient()
+
+      const cid = await storeThing(client, file)
+
+      console.log("cid returned  editorContext.uploadImageV2: ", cid)
+
+      return cid
     };
 
     // Mint function - returns CID or throws
@@ -203,6 +219,7 @@ import React, {
       password,
       setPassword: setCleanedPassword,
       uploadImage,
+      uploadImageV2,
       uploadTokenMetadata,
       publishMarkdown,
       downloadMarkdown,

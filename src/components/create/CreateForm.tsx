@@ -198,11 +198,12 @@ const CreateForm = () => {
 
     try {
       const jsonString = JSON.stringify(updatedTokenMetadata)
+      console.log("is the json string correct?", jsonString)
       const jsonBlob = new Blob([jsonString], { type: "application/json" });
       const jsonFile = new File([jsonBlob], "tokenMetadata.json", { type: "application/json", lastModified: Date.now() });
       const cid = await editorContext.uploadTokenMetadata(jsonFile)
-      return cid
       console.log("metadata cid: ", cid)
+      return cid      
     } catch (err) {
       console.error("Error uploading metadata", err)
     }

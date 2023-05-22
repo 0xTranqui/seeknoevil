@@ -1,65 +1,67 @@
 // @ts-nocheck
 
-import { getFilesFromPath } from 'web3.storage';
-
+import formidable from 'formidable';
+import fs from 'fs';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { uploadToIpfs } from '../../components/markdown/server/uploadToIpfs';
 import sendInvalidRequestResponse from '../../components/markdown/server/util/sendInvalidRequestResponse';
 import EndpointResult from '../../components/markdown/types/EndpointResult';
 import executeAsyncForResult from '../../utils/executeAsyncForResult';
-import {
-  checkUploadSize,
-  isImageMimeType,
-  MAX_UPLOAD_SIZE,
-} from '../../utils/fileUploadUtils';
+import { checkUploadSize, isImageMimeType, MAX_UPLOAD_SIZE } from '../../utils/fileUploadUtils';
 import resultToEndpointResult from '../../utils/resultToEndpointResult';
-import formidable from 'formidable';
+
+type UploadRequest = {
+  file: {
+    name: string;
+    type: string;
+    size: number;
+    arrayBuffer: Buffer;
+  };
+};
 
 export type ApiUploadResponse = EndpointResult<{
   cid: string;
 }>;
 
-type UploadRequest = {
-  file: File;
-};
+const parseRequest = async (req: NextApiRequest): Promise<UploadRequest | undefined> => {
+  const form = new formidable.IncomingForm();
+  form.maxFileSize = MAX_UPLOAD_SIZE;
 
-// Parses the file sent in the multipart form data under form.file
-const parseRequest = async (
-  req: NextApiRequest
-): Promise<UploadRequest | undefined> => {
-  const form = formidable({
-    maxFileSize: MAX_UPLOAD_SIZE,
-  });
+  return new Promise<UploadRequest | undefined>((resolve, reject) => {
+    form.parse(req, async (err, fields, files) => {
+      console.log('Files:', files);
+      console.log('Error:', err);
+    
+      if (err) {
+        reject(err);
+        return;
+      }
 
-  return new Promise<UploadRequest | undefined>((resolve) => {
-    // Parse files from form
-    form.parse(req, (err, fields, files) => {
-
-      // if (files && files.file && 'path' in files.file) {
-        if (files && files.file && 'filepath' in files.file) {
-        
+      if (files && files.file) {
         const file = files.file;
+        let buffer: Buffer;
 
-
-        // Check the file keyed by "file"
-        if (!checkUploadSize(file.size) || !isImageMimeType(file.type)) {
-          console.log('Invalid file sent', file);
-          resolve(undefined);
+        if (file instanceof formidable.File) {
+          buffer = await fs.promises.readFile(file.filepath);
+        } else if (file instanceof Buffer) {
+          buffer = file;
+        } else {
+          reject(new Error('Invalid file input'));
           return;
         }
 
-        const sentFilepath = file.filepath as string;
-
-        // Retrieve the file from the filepath
-        getFilesFromPath([sentFilepath]).then((files) => {
-          if (files.length > 0) {
-            resolve({
-              file: files[0] as unknown as File,
-            });
-          } else {
-            resolve(undefined);
-          }
-        });
+        if (checkUploadSize(buffer.length) && isImageMimeType(file.type)) {
+          resolve({
+            file: {
+              name: file.originalFilename,
+              type: file.type,
+              size: buffer.length,
+              arrayBuffer: buffer,
+            },
+          });
+        } else {
+          resolve(undefined);
+        }
       } else {
         resolve(undefined);
       }
@@ -67,11 +69,7 @@ const parseRequest = async (
   });
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<ApiUploadResponse>
-) {
-
+export default async function handler(req: NextApiRequest, res: NextApiResponse<ApiUploadResponse>) {
   if (req.method !== 'POST') {
     sendInvalidRequestResponse(res);
     return;
