@@ -7,6 +7,7 @@ function getAccessToken() {
 
 function makeStorageClient() {
   return new Web3Storage({ token: getAccessToken() as string });
+  
 }
 
 const client = makeStorageClient();
