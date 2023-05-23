@@ -1,38 +1,30 @@
-// @ts-nocheck
-
+import { BigNumber } from "ethers";
 import { erc1155Press_abi } from "../contracts/erc1155Press_abi";
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from "wagmi";
 
 type Props = {
-    tokenId: string,
-    userAddress: string,
+    collection: `0x${string}`,
+    tokenId: BigNumber,
+    userAddress: `0x${string}`,
     onSuccessCB?: Function
 };
 
-export function useMintExisting({tokenId, userAddress, onSuccessCB }: Props) {
+export function useMintExisting({collection, tokenId, userAddress, onSuccessCB }: Props) {
 
-    console.log("user address: ", userAddress)
-
-    const ap1155Press = process.env.NEXT_PUBLIC_AP_1155_CONTRACT ? process.env.NEXT_PUBLIC_AP_1155_CONTRACT : ""
-
-    console.log(" address: ", ap1155Press)
-
-    const validMint = !tokenId || !userAddress ? false : true 
+    const validMint = !collection || !tokenId || !userAddress ? false : true 
 
     const { config, error } = usePrepareContractWrite({
-        address: ap1155Press,
+        address: collection,
         abi: erc1155Press_abi,
         functionName: "mintExisting",
         args: [
             tokenId,
             [userAddress], // mint recipient
-            1 // mint quantity always hardcoded to 1
+            BigNumber.from(1) // mint quantity always hardcoded to 1
         ],
         enabled: validMint
         // overrides: {} // hardcoded as zero for no but could also be dynamic based on prior read call
-    })
-    
-    console.log("mint existing prep config error", error)
+    })    
 
     const { 
         write,
@@ -60,6 +52,7 @@ export function useMintExisting({tokenId, userAddress, onSuccessCB }: Props) {
         config,
         error,
         write,
+        writeError,
         data,
         isError,
         isLoading,
