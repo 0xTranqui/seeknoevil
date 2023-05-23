@@ -37,9 +37,7 @@ const useENSResolver = ({ address }: Props) => {
                 }
             });
         }        
-    },
-    [address]
-    )   
+    }, [address])   
 
     return resolvedAddress
 };

@@ -28,12 +28,10 @@ const useNumMinted = ({ collectionAddress, tokenId }: Props) => {
         return response.text();
       })
       .then((data) => {
-        console.log('num minted = ', data);
         setNumMinted(data);
         setError(null); // Clear the error state
       })
       .catch((error) => {
-        console.error('Error:', error);
         setError(error); // Update the error state
       });
     return;
@@ -43,8 +41,6 @@ const useNumMinted = ({ collectionAddress, tokenId }: Props) => {
   useEffect(() => {
     fetchNumMinted();
   }, [userAddress, collectionAddress, tokenId]);
-
-  console.log("num minted", numMinted)
 
   return { numMinted, fetchNumMinted, error }; // Return the error state as well
 };

@@ -10,12 +10,6 @@ import { Header } from '../components';
 import { CurationDataProvider } from "../providers/CurationDataProvider"
 import { ChannelAdminProvider } from "../providers/ChannelAdminProvider"
 import { ENSResolverProvider } from '../providers/ENSResolverProvider';
-import { getDefaultClient } from 'connectkit';
-// wagmi
-import { createClient, configureChains } from 'wagmi';
-import { mainnet, goerli, sepolia } from 'wagmi/chains';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { publicProvider } from 'wagmi/providers/public';
 
 // determines what curation contract will be used for blog context
 const channel = process.env.NEXT_PUBLIC_AP_721_CURATION_CONTRACT;
