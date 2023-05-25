@@ -13,6 +13,7 @@ import ListingInfo from "../components/mintSection/ListingInfo";
 import useNumMinted from "../hooks/useNumMinted";
 import useTotalSupply from "../hooks/useTotalSupply";
 import VideoPlayer from "../components/video/VideoPlayer";
+import VideoPlayerSimple from "../components/video/VideoPlayerSimple";
 import useENSResolver from "../hooks/useENSResolver";
 import useGetTokenCreator from "../hooks/useGetTokenCreator";
 import SvgLoader from "../components/mintSection/SvgLoader";
@@ -208,7 +209,8 @@ const ListingPage: NextPage = () => {
     return (
       <div className="text-[14px] flex flex-col sm:items-center bg-[#FFFFFF] min-h-[100vh] pt-[77px] sm:pt-10 pb-[90px] sm:pb-[108px] h-full w-full sm:justify-center">
         <div className="sm:pt-[25px] w-full">
-          <VideoPlayer videoPath={ipfsPath} thumnbnailURL={imageURL} />
+          {/* <VideoPlayer videoPath={ipfsPath} thumnbnailURL={imageURL} /> */}
+          <VideoPlayerSimple videoPath={ipfsPath} thumnbnailURL={imageURL} />
           <div className="flex flex-col sm:flex-row  w-full sm:justify-between mt-4 sm:mt-0">
             <div className="pl-[17px] sm:pl-[48px] pt-[16px] ">
               <div className="font-[helvetica] text-[20px] font-normal">
