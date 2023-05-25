@@ -1,6 +1,4 @@
-import { Player, useCreateAsset, useAssetMetrics } from "@livepeer/react";
-import { parseArweaveTxId, parseCid } from "../../utils/livpeer";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { Player } from "@livepeer/react";
 
 type Props = {
   thumnbnailURL: string;
@@ -29,7 +27,7 @@ const VideoPlayerSimple: React.FC<Props> = ({ videoPath, thumnbnailURL }) => {
                 <Player 
                     src={formattedVideoPath}
                     showUploadingIndicator
-                    autoUrlUpload
+                    autoUrlUpload={{ fallback: true, ipfsGateway: 'https://cloudflare-ipfs.com' }}
                 />                        
             </div>
         </div>
