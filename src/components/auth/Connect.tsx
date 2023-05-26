@@ -6,6 +6,7 @@ import { shortenAddress } from '../../utils/shortenAddress';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useChannelAdmins } from '../../providers/ChannelAdminProvider';
+import useENSResolver from "../../hooks/useENSResolver";
 
 export const Connect = () => {
   const { address, logout } = useAuth();
@@ -13,6 +14,9 @@ export const Connect = () => {
   const { admin1, admin2 } = useChannelAdmins();
   const [showDisconnect, setShowDisonnect] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
+
+  const user = address ? address : null;
+  const resolvedUser = useENSResolver({ address: user });  
 
   const handleShowDisconnect = () => {
     setShowDisonnect(!showDisconnect);
@@ -70,7 +74,7 @@ export const Connect = () => {
                     </>
                   )}
                   <button className="text-black w-fit flex flex-row hover:font-bold" onClick={handleShowDisconnect}>
-                    {ensName ? ensName : shortenAddress(address)}
+                    {resolvedUser ? resolvedUser : shortenAddress(user)}
                   </button>
                 </div>
               </div>

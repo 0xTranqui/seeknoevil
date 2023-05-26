@@ -95,6 +95,7 @@ const ListingPage: NextPage = () => {
   });
 
   const handleMintInteraction = () => {
+    console.log("user adddress : ", userAddress)
     if (userAddress) {
       write?.();
     } else {
@@ -220,7 +221,13 @@ const ListingPage: NextPage = () => {
                   href={`https://goerli.etherscan.io/address/${author}`}
                   className="font-[helvetica] hover:underline"
                 >
-                  {shortenAddress(author)}
+                  {
+                    !!author
+                    ? !!resolvedAuthor
+                      ? resolvedAuthor
+                      : shortenAddress(author)
+                    : "unknown"
+                  }
                 </a>
                 &nbsp;{"– " + publicationDate}
               </div>
