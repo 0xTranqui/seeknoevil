@@ -95,6 +95,7 @@ const ListingPage: NextPage = () => {
   });
 
   const handleMintInteraction = () => {
+    console.log("user adddress : ", userAddress)
     if (userAddress) {
       write?.();
     } else {

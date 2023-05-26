@@ -13,7 +13,7 @@ const ListingInfo: React.FC<Props> = ({ collectionAddress, tokenId }) => {
         contract address:&nbsp;
         <a 
         className="hover:underline font-IBMPlexMonoLight font-normal"
-        href={`https://goerli.etherscan.io/address/${collectionAddress}`}
+        href={`https://sepolia.etherscan.io/address/${collectionAddress}`}
         >
         {shortenAddress(collectionAddress)}
         </a>
@@ -22,7 +22,7 @@ const ListingInfo: React.FC<Props> = ({ collectionAddress, tokenId }) => {
         tokenID:&nbsp;
         <a 
         className="hover:underline font-IBMPlexMonoLight font-normal"
-        href={`https://goerli.etherscan.io/nft/${collectionAddress}/${tokenId}`}
+        href={`https://sepolia.etherscan.io/nft/${collectionAddress}/${tokenId}`}
         >
         {tokenId}
         </a>
