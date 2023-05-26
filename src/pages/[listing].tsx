@@ -220,7 +220,13 @@ const ListingPage: NextPage = () => {
                   href={`https://goerli.etherscan.io/address/${author}`}
                   className="font-[helvetica] hover:underline"
                 >
-                  {shortenAddress(author)}
+                  {
+                    !!author
+                    ? !!resolvedAuthor
+                      ? resolvedAuthor
+                      : shortenAddress(author)
+                    : "unknown"
+                  }
                 </a>
                 &nbsp;{"– " + publicationDate}
               </div>
