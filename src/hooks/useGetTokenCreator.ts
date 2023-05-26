@@ -18,9 +18,15 @@ export function useGetTokenCreator({providerForQuery, collection, tokenId}: Prop
         const getEvents = async () => {
             if (!providerForQuery || !collection || !tokenId) return
             const eventFilter = new ethers.Contract(collection, eventAbi, providerForQuery)            
-            let eventFilterNewTokenMinted = eventFilter.filters.NewTokenMinted()
+            let eventFilterNewTokenMinted = eventFilter.filters.NewTokenMinted();
+            let startBlock = 3421386; // ERC1155PressFactoryProxy block deploy date 
+            let endBlock = 'latest';
             try {
-                const newTokenMintedEvents = await eventFilter.queryFilter(eventFilterNewTokenMinted) 
+                const newTokenMintedEvents = await eventFilter.queryFilter(
+                    eventFilterNewTokenMinted,
+                    startBlock,
+                    endBlock
+                ); 
                 console.log("new token minted events", newTokenMintedEvents)           
                 for (let i = 0; i < newTokenMintedEvents.length; i++) {
                     // @ts-ignore
