@@ -90,7 +90,7 @@ const ListingPage: NextPage = () => {
     if (userAddress) {
       write?.();
     } else {
-      setOpen?.();
+      setOpen?.(true);
     }
   };
 
