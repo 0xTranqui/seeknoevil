@@ -10,8 +10,7 @@ import useMintExisting from "../hooks/useMintExisting";
 import { useAuth } from "../hooks/useAuth";
 import { useModal } from "connectkit";
 import ListingInfo from "../components/mintSection/ListingInfo";
-import useNumMinted from "../hooks/useNumMinted";
-import useTotalSupply from "../hooks/useTotalSupply";
+import useMintStats from "../hooks/useMintStats";
 import VideoPlayerSimple from "../components/video/VideoPlayerSimple";
 import useENSResolver from "../hooks/useENSResolver";
 import useGetTokenCreator from "../hooks/useGetTokenCreator";
@@ -62,31 +61,18 @@ const ListingPage: NextPage = () => {
     tokenId: tokenIdToMint,
   });
 
-  const { numMinted, fetchNumMinted } = useNumMinted({
-    collectionAddress: process.env.NEXT_PUBLIC_AP_1155_CONTRACT,
+  const { userNumMinted, tokenTotalSupply } = useMintStats({
+    collectionAddress: collectionToMintFrom,
     tokenId: tokenIdToMint,
   });
-
-  const { totalSupply, fetchTotalSupply } = useTotalSupply({
-    collectionAddress: process.env.NEXT_PUBLIC_AP_1155_CONTRACT,
-    tokenId: tokenIdToMint,
-  });
-
-  // function to refresh mint counts on successful mintExisting call
-  const refreshMintData = () => {
-    fetchNumMinted();
-    fetchTotalSupply();
-  };
 
   const { write, isLoading, isSuccess, mintExistingLoading } = useMintExisting({
     collection: collectionToMintFrom,
     tokenId: tokenIdToMint,
     userAddress: userAddress,
-    onSuccessCB: refreshMintData,
   });
 
   const handleMintInteraction = () => {
-    console.log("user adddress : ", userAddress)
     if (userAddress) {
       write?.();
     } else {
@@ -95,7 +81,7 @@ const ListingPage: NextPage = () => {
   };
 
   const collectButtonContent =
-    numMinted > 0
+    userNumMinted > 0
       ? "Collected!"
       : isLoading || mintExistingLoading
       ? <SvgLoader />
@@ -104,7 +90,6 @@ const ListingPage: NextPage = () => {
       : "Collect – 0.00 ETH";
 
   const processIPFS = (ipfsPlain: string) => {
-    // let converted = "https://ipfs.io/ipfs/" + ipfsPlain.slice(7)
     let converted = "https://cloudflare-ipfs.com/ipfs/" + ipfsPlain.slice(7);
     return converted;
   };
@@ -131,7 +116,7 @@ const ListingPage: NextPage = () => {
 
   if (!mediaType) {
     return (
-      <div className="text-[14px] flex flex-row flex-wrap  bg-[#FFFFFF] min-h-[100vh] pt-10 pb-[90px] sm:pb-[108px] h-full w-full justify-center sm:justify-start ">
+      <div className=" text-[14px] flex flex-row flex-wrap  min-h-[100vh] pt-10 pb-[90px] sm:pb-[108px] h-full w-full justify-center sm:justify-start ">
         <div className="pt-[80px] sm:pt-[10px] sm:px-[16px]">
           loading
           <span className="ml-[6px] dot-animation">
@@ -144,7 +129,7 @@ const ListingPage: NextPage = () => {
     );
   } else if (mediaType === "markdown") {
     return (
-      <div className="text-[14px] flex flex-row flex-wrap  bg-[#FFFFFF] min-h-[100vh] pt-10 pb-[90px] sm:pb-[108px] h-full w-full justify-center ">
+      <div className=" text-[14px] flex flex-row flex-wrap  min-h-[100vh] pt-10 pb-[90px] sm:pb-[108px] h-full w-full justify-center ">
         <div className=" w-[360px] sm:w-[500px] md:w-[625px] pt-[80px] sm:pt-[110px]">
           <div className="font-[helvetica] flex flex-row w-full justify-start text-[24px] font-normal">
             {title}
@@ -165,10 +150,10 @@ const ListingPage: NextPage = () => {
           </div>
           <div className="font-[helvetica] text-[14px] mt-[19px] mb-[60px] sm:mb-[19px] font-normal">
             {description}
-          </div>            
+          </div>             
           {ipfsPath && <MarkdownViewer ipfsPath={ipfsPath} />}
           <ListingInfo
-            collectionAddress={process.env.NEXT_PUBLIC_AP_1155_CONTRACT}
+            collectionAddress={collectionToMintFrom}
             tokenId={tokenIdToMint}
           />
           <div className="w-full flex flex-row mt-[65px] items-center">
@@ -179,7 +164,7 @@ const ListingPage: NextPage = () => {
             */}
             <button
               disabled={
-                numMinted > 0 ||
+                userNumMinted > 0 ||
                 (isSuccess && !mintExistingLoading && !isLoading)
                   ? true
                   : false
@@ -192,15 +177,16 @@ const ListingPage: NextPage = () => {
               {collectButtonContent}
             </button>
             <div className="ml-[23px] text-black font-IBMPlexMono">
-              {totalSupply}&nbsp;minted
+              {tokenTotalSupply}&nbsp;minted
             </div>
           </div>
         </div>
       </div>
     );
   } else if (mediaType === "video") {
+    console.log("this shit is video", mediaType)
     return (
-      <div className="text-[14px] flex flex-col sm:items-center bg-[#FFFFFF] min-h-[100vh] pt-[77px] sm:pt-10 pb-[90px] sm:pb-[108px] h-full w-full sm:justify-center">
+      <div className="text-[14px] flex flex-col sm:items-center min-h-[100vh] pt-[77px] sm:pt-10 pb-[90px] sm:pb-[108px] h-full w-full sm:justify-center">
         <div className="sm:pt-[25px] w-full">
           <VideoPlayerSimple videoPath={ipfsPath} thumnbnailURL={imageURL} />
           <div className="flex flex-col sm:flex-row  w-full sm:justify-between mt-4 sm:mt-0">
@@ -214,21 +200,19 @@ const ListingPage: NextPage = () => {
                   href={`https://goerli.etherscan.io/address/${author}`}
                   className="font-[helvetica] hover:underline"
                 >
-                  {
-                    !!author
-                    ? !!resolvedAuthor
-                      ? resolvedAuthor
-                      : shortenAddress(author)
-                    : "unknown"
-                  }
+                {!!author
+                  ? !!resolvedAuthor
+                    ? resolvedAuthor
+                    : shortenAddress(author)
+                  : "unknown"}
                 </a>
                 &nbsp;{"– " + publicationDate}
-              </div>
+              </div>         
               <div className="font-[helvetica] text-[14px] mt-[19px] mb-[60px] sm:mb-[19px] font-normal">
                 {description}
               </div>
               <ListingInfo
-                collectionAddress={process.env.NEXT_PUBLIC_AP_1155_CONTRACT}
+                collectionAddress={collectionToMintFrom}
                 tokenId={tokenIdToMint}
               />
             </div>
@@ -236,7 +220,7 @@ const ListingPage: NextPage = () => {
               <div className="w-full flex flex-row items-center pt-[16px] mb-[19px]">
                 <button
                   disabled={
-                    numMinted > 0 ||
+                    userNumMinted > 0 ||
                     (isSuccess && !mintExistingLoading && !isLoading)
                       ? true
                       : false
@@ -251,7 +235,7 @@ const ListingPage: NextPage = () => {
                   {collectButtonContent}
                 </button>
                 <div className="ml-[23px] text-black font-IBMPlexMono">
-                  {totalSupply}&nbsp;minted
+                  {tokenTotalSupply}&nbsp;minted
                 </div>
               </div>
             </div>
