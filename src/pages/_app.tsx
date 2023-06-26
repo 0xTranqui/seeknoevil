@@ -21,6 +21,7 @@ const channel = process.env.NEXT_PUBLIC_AP_721_CURATION_CONTRACT;
 
 const channelAdmin_1 = "0x153D2A196dc8f1F6b9Aa87241864B3e4d4FEc170"
 const channelAdmin_2 = "0x4C53C6D546C9E38db56040Ab505460A9187A5281"
+const channelAdmin_3 = "0xbC68dee71fd19C6eb4028F98F3C3aB62aAD6FeF3"
 
 const favicon = "../public/favicon.png"
 
@@ -45,7 +46,7 @@ function App({ Component, pageProps }: AppProps) {
     <WagmiConfig client={client}>
       <ConnectKitProvider>
         <CurationDataProvider curationContract={channel} >
-          <ChannelAdminProvider channelAdmin1={channelAdmin_1} channelAdmin2={channelAdmin_2}>
+          <ChannelAdminProvider channelAdmin1={channelAdmin_1} channelAdmin2={channelAdmin_2} channelAdmin3={channelAdmin_3}/>
             <ENSResolverProvider>
               <LivepeerConfig client={livepeerClient}>
                 <NextHead>

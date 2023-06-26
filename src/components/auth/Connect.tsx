@@ -11,7 +11,7 @@ import useENSResolver from "../../hooks/useENSResolver";
 export const Connect = () => {
   const { address, logout } = useAuth();
   const userAddress = address ? address : null;
-  const { admin1, admin2 } = useChannelAdmins();
+  const { admin1, admin2, admin3 } = useChannelAdmins();
   const [showDisconnect, setShowDisonnect] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
 
@@ -31,7 +31,7 @@ export const Connect = () => {
     setShowOptions(!showOptions);
   };
 
-  const isAdmin = userAddress === admin1 || userAddress === admin2;
+  const isAdmin = userAddress === admin1 || userAddress === admin2 || userAddress === admin3;
 
   return (
     <ConnectKitButton.Custom>
