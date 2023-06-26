@@ -46,7 +46,7 @@ function App({ Component, pageProps }: AppProps) {
     <WagmiConfig client={client}>
       <ConnectKitProvider>
         <CurationDataProvider curationContract={channel}>
-          <ChannelAdminProvider channelAdmin1={channelAdmin_1} channelAdmin2={channelAdmin_2} channelAdmin3={channelAdmin_3}/>
+          <ChannelAdminProvider channelAdmin1={channelAdmin_1} channelAdmin2={channelAdmin_2} channelAdmin3={channelAdmin_3} />
             <ENSResolverProvider>
               <LivepeerConfig client={livepeerClient}>
                 <NextHead>

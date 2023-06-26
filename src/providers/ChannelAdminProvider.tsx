@@ -16,7 +16,7 @@ interface ChannelAdminProviderProps {
   channelAdmin3: string;
 }
 
-export function ChannelAdminProvider({ children, channelAdmin1, channelAdmin2 }: ChannelAdminProviderProps) {
+export function ChannelAdminProvider({ children, channelAdmin1, channelAdmin2, channelAdmin3 }: ChannelAdminProviderProps) {
   
 
   const value = {
