@@ -10,7 +10,7 @@ export default function Manage() {
 
   const { address } = useAuth()
   const userAddress = address ? address : null
-  const { admin1, admin2 } = useChannelAdmins()
+  const { admin1, admin2, admin3 } = useChannelAdmins()
 
   return (
     <div>
@@ -18,7 +18,7 @@ export default function Manage() {
         <title>manage</title>
       </Head>
       <>
-      {userAddress !== admin1 && userAddress !== admin2 ? (
+      {userAddress !== admin1 && userAddress !== admin2 && userAddress !== admin3 ? (
         <div className="flex flex-row w-full h-[100vh] justify-center items-center">
           {`you do not have access to "manage"`}
         </div>
